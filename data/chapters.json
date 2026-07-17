@@ -1,0 +1,6 @@
+{
+  "chapters": {
+    "prologue": {"title": "Before Colonial Rule", "scene": "res://scenes/world/PrologueVillage.tscn", "required_quests": []},
+    "chapter_1": {"title": "The Arrival of Europeans", "scene": "res://scenes/world/ChapterOneSettlement.tscn", "required_quests": ["prologue_speak_to_elder", "prologue_meet_the_village", "prologue_collect_memories"]}
+  }
+}

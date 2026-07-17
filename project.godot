@@ -10,6 +10,8 @@ SaveGame="*res://scripts/save/save_game.gd"
 QuestManager="*res://scripts/quests/quest_manager.gd"
 InventoryManager="*res://scripts/inventory/inventory_manager.gd"
 TimeOfDay="*res://scripts/systems/time_of_day.gd"
+AudioManager="*res://scripts/systems/audio_manager.gd"
+ChapterManager="*res://scripts/systems/chapter_manager.gd"
 
 [display]
 window/size/viewport_width=1280
@@ -48,6 +50,14 @@ quest_log={
 inventory={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"physical_keycode":73)]
+}
+map={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":77)]
+}
+manual_save={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":4194324)]
 }
 
 [rendering]

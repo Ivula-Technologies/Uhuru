@@ -10,4 +10,4 @@ A narrative adventure RPG about Kenya's history as experienced by families and c
 
 This foundation includes a title screen, persistent settings/save data, a playable pre-colonial village vignette, movement, an elder interaction, and a journal discovery.
 
-Controls: `WASD` or arrow keys to move, `Shift` to run, `E` to interact, `Esc` to return to the title screen.
+Controls: `WASD` or arrow keys to move, `Shift` to run, `E` to interact, `J` journal, `Q` quest log, `I` inventory, `M` map, `F5` manual save, and `Esc` to return to the title screen.

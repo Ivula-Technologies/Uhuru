@@ -14,6 +14,7 @@ The first playable milestone is a small pre-colonial village where the player ca
 - Persistent inventory (`I`) and collectible objects linked to journal discoveries and an exploration quest.
 - Reusable time-of-day clock and environmental tinting for dawn, day, dusk, and night.
 - Data-driven NPC schedules that reposition villagers by time-of-day phase.
+- Village map panel (`M`) as the basis for regional navigation.
 - Persistent save data includes a schema version, completed quests, journal entries, and settings.
 
 ## Next implementation tasks

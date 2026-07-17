@@ -8,7 +8,7 @@
       "quest_id": "prologue_speak_to_elder",
       "dialogue": {
         "text": "Our land remembers the hands that farm it, the paths traders walk, and the families who care for one another. Before strangers arrive, listen closely to what already lives here.",
-        "choices": [{"id": "ask_about_land", "text": "Tell me about our land."}, {"id": "listen", "text": "I will listen."}]
+        "choices": [{"id": "ask_about_land", "text": "Tell me about our land.", "relationship_delta": 1, "response": "The land is not only soil. It holds work, memory, and responsibility. We care for it together."}, {"id": "listen", "text": "I will listen.", "relationship_delta": 1, "response": "Then begin with the people around you. Every task you see is part of a larger story."}]
       }
     },
     {

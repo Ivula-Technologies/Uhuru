@@ -2,7 +2,7 @@ class_name DialoguePanel
 extends CanvasLayer
 
 signal dialogue_finished
-signal choice_selected(choice_id: String)
+signal choice_selected(choice: Dictionary)
 
 var speaker_label: Label
 var body_label: RichTextLabel
@@ -59,7 +59,8 @@ func show_line(speaker: String, text_value: String, choices: Array = [], portrai
 	for index in choices.size():
 		var choice: Dictionary = choices[index]
 		var choice_id: String = choice.get("id", "choice_" + str(index))
-		_add_choice(choice.get("text", "Continue"), _select_choice.bind(choice_id))
+		choice["id"] = choice_id
+		_add_choice(choice.get("text", "Continue"), _select_choice.bind(choice))
 
 func _add_choice(text_value: String, callback: Callable) -> void:
 	var button := Button.new()
@@ -72,6 +73,13 @@ func _finish() -> void:
 	panel.visible = false
 	dialogue_finished.emit()
 
-func _select_choice(choice_id: String) -> void:
-	choice_selected.emit(choice_id)
-	_finish()
+func _select_choice(choice: Dictionary) -> void:
+	choice_selected.emit(choice)
+	var response: String = choice.get("response", "")
+	if response.is_empty():
+		_finish()
+		return
+	body_label.text = response
+	for child in choice_box.get_children():
+		child.queue_free()
+	_add_choice("Continue", _finish)

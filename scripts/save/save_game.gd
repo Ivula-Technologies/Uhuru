@@ -15,6 +15,7 @@ func _default_data() -> Dictionary:
 		"journal": ["You have arrived in the village at dawn."],
 		"completed_quests": [],
 		"choices": {},
+		"relationships": {},
 		"visited_npcs": [],
 		"seen_cutscenes": [],
 		"inventory": [],
@@ -58,6 +59,15 @@ func record_choice(choice_key: String, choice_id: String) -> void:
 	choices[choice_key] = choice_id
 	data["choices"] = choices
 	save_game()
+
+func adjust_relationship(character_id: String, amount: int) -> void:
+	var relationships: Dictionary = data.get("relationships", {})
+	relationships[character_id] = int(relationships.get(character_id, 0)) + amount
+	data["relationships"] = relationships
+	save_game()
+
+func get_relationship(character_id: String) -> int:
+	return int(data.get("relationships", {}).get(character_id, 0))
 
 func mark_npc_visited(npc_id: String) -> void:
 	var visited: Array = data.get("visited_npcs", [])

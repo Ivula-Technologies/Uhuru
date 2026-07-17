@@ -7,8 +7,10 @@ var player: CharacterBody2D
 var journal_panel: RichTextLabel
 var quest_panel: RichTextLabel
 var inventory_panel: RichTextLabel
+var map_panel: RichTextLabel
 var prompt: Label
 var clock_label: Label
+var save_status: Label
 var world_tint: CanvasModulate
 var dialogue: DialoguePanel
 var dialogue_open := false
@@ -137,6 +139,10 @@ func _build_hud() -> void:
 	clock_label.position = Vector2(1110, 28)
 	clock_label.add_theme_font_size_override("font_size", 20)
 	layer.add_child(clock_label)
+	save_status = Label.new()
+	save_status.position = Vector2(1040, 680)
+	save_status.add_theme_color_override("font_color", Color("e7bb63"))
+	layer.add_child(save_status)
 	journal_panel = RichTextLabel.new()
 	journal_panel.bbcode_enabled = true
 	journal_panel.position = Vector2(890, 105)
@@ -158,6 +164,14 @@ func _build_hud() -> void:
 	inventory_panel.visible = false
 	inventory_panel.add_theme_font_size_override("normal_font_size", 16)
 	layer.add_child(inventory_panel)
+	map_panel = RichTextLabel.new()
+	map_panel.bbcode_enabled = true
+	map_panel.position = Vector2(350, 130)
+	map_panel.size = Vector2(580, 360)
+	map_panel.visible = false
+	map_panel.add_theme_font_size_override("normal_font_size", 20)
+	map_panel.text = "[b]VILLAGE MAP[/b]\n\n        Hills and fields\n\n  Water path       Weaver\n\nYou     Elder       Homestead\n\n        Market path\n\n[yellow]M[/yellow] Close map"
+	layer.add_child(map_panel)
 	_refresh_journal()
 	_refresh_quest_log()
 	_refresh_inventory()
@@ -197,6 +211,14 @@ func _process(_delta: float) -> void:
 		inventory_panel.visible = not inventory_panel.visible
 		journal_panel.visible = false
 		quest_panel.visible = false
+	if Input.is_action_just_pressed("map"):
+		map_panel.visible = not map_panel.visible
+		journal_panel.visible = false
+		quest_panel.visible = false
+		inventory_panel.visible = false
+	if Input.is_key_pressed(KEY_F5):
+		SaveGame.save_game()
+		save_status.text = "Progress saved"
 	if Input.is_key_pressed(KEY_ESCAPE) and not dialogue_open:
 		get_tree().change_scene_to_file("res://scenes/menus/TitleScreen.tscn")
 
@@ -219,7 +241,10 @@ func _on_npc_interaction_requested(npc: VillageNPC) -> void:
 	player.movement_enabled = false
 	speaking_npc_id = npc.npc_id
 	var line: Dictionary = npc.profile.get("dialogue", {})
-	dialogue.show_line(npc.profile.get("display_name", "Villager"), line.get("text", ""), line.get("choices", []), Color(npc.profile.get("color", "684838")))
+	var text_value: String = line.get("text", "")
+	if SaveGame.get_relationship(npc.npc_id) > 0:
+		text_value += "\n\nYou have listened with care before. The villager remembers."
+	dialogue.show_line(npc.profile.get("display_name", "Villager"), text_value, line.get("choices", []), Color(npc.profile.get("color", "684838")))
 	var quest_id: String = npc.profile.get("quest_id", "")
 	QuestManager.evaluate_npc_visit(npc.npc_id)
 	if not quest_id.is_empty():
@@ -242,9 +267,10 @@ func _on_quest_completed(_quest_id: String) -> void:
 	_refresh_quest_log()
 	journal_panel.visible = true
 
-func _on_dialogue_choice_selected(choice_id: String) -> void:
+func _on_dialogue_choice_selected(choice: Dictionary) -> void:
 	if not speaking_npc_id.is_empty():
-		SaveGame.record_choice(speaking_npc_id, choice_id)
+		SaveGame.record_choice(speaking_npc_id, choice.get("id", ""))
+		SaveGame.adjust_relationship(speaking_npc_id, int(choice.get("relationship_delta", 0)))
 	speaking_npc_id = ""
 
 func _on_intro_cutscene_finished() -> void:

@@ -25,6 +25,7 @@ def check_project_layout() -> None:
         "scripts/quests/quest_manager.gd",
         "scripts/inventory/inventory_manager.gd",
         "scripts/systems/time_of_day.gd",
+        "scripts/systems/audio_manager.gd",
         "scripts/ui/dialogue_panel.gd",
         "scripts/npc/village_npc.gd",
         "scripts/world/collectible.gd",
@@ -56,6 +57,7 @@ def check_npc_data() -> None:
         for choice in dialogue.get("choices", []):
             assert choice.get("id") and choice.get("text"), f"{npc['id']} has an invalid choice."
             choice_ids.append(choice["id"])
+            assert isinstance(choice.get("relationship_delta", 0), int), f"{npc['id']} has an invalid relationship delta."
         schedule = npc.get("schedule", {})
         for phase, position in schedule.items():
             assert phase in {"dawn", "day", "dusk", "night"}, f"{npc['id']} has an invalid phase."
@@ -74,8 +76,16 @@ def check_collectible_data() -> None:
         assert item.get("journal_entry"), f"{item['id']} needs a journal entry."
 
 
+def check_chapter_data() -> None:
+    chapters = load_json("data/chapters.json").get("chapters", {})
+    assert {"prologue", "chapter_1"}.issubset(chapters), "Prologue and Chapter 1 are required."
+    for chapter_id, chapter in chapters.items():
+        assert chapter.get("title") and chapter.get("scene"), f"{chapter_id} needs title and scene."
+        assert (ROOT / chapter["scene"].replace("res://", "")).is_file(), f"{chapter_id} scene is missing."
+
+
 def main() -> int:
-    checks = [check_project_layout, check_quest_data, check_npc_data, check_collectible_data]
+    checks = [check_project_layout, check_quest_data, check_npc_data, check_collectible_data, check_chapter_data]
     for check in checks:
         check()
         print(f"PASS {check.__name__}")

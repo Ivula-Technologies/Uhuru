@@ -61,7 +61,7 @@ func _show_settings() -> void:
 	var volume := HSlider.new()
 	volume.max_value = 100
 	volume.value = SaveGame.data.settings.music_volume
-	volume.value_changed.connect(func(value): SaveGame.data.settings.music_volume = value; SaveGame.save_game())
+	volume.value_changed.connect(func(value): SaveGame.data.settings.music_volume = value; AudioManager.set_music_volume(value); SaveGame.save_game())
 	box.add_child(volume)
 	_add_label(box, "Controls: WASD / arrows to move • Shift to run • E to interact", 15, Color.WHITE)
 	_add_button(box, "Back", func(): settings_panel.queue_free(); settings_panel = null)
