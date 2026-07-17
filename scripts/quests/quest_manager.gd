@@ -52,3 +52,17 @@ func evaluate_npc_visit(npc_id: String) -> void:
 				break
 		if all_visited:
 			complete_quest(quest_id)
+
+func evaluate_inventory() -> void:
+	for quest_id in quests:
+		var quest: Dictionary = quests[quest_id]
+		var required_items: Array = quest.get("required_items", [])
+		if required_items.is_empty() or SaveGame.has_completed_quest(quest_id):
+			continue
+		var all_collected := true
+		for item_id in required_items:
+			if not InventoryManager.has_item(item_id):
+				all_collected = false
+				break
+		if all_collected:
+			complete_quest(quest_id)

@@ -17,6 +17,7 @@ func _default_data() -> Dictionary:
 		"choices": {},
 		"visited_npcs": [],
 		"seen_cutscenes": [],
+		"inventory": [],
 		"settings": {"music_volume": 75.0, "text_speed": 1.0}
 	}
 

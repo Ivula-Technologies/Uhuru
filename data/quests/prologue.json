@@ -14,6 +14,14 @@
       "objectives": ["Speak with the Farmer.", "Speak with the Trader.", "Speak with the Young Weaver.", "Speak with the Water Carrier."],
       "required_npcs": ["farmer", "trader", "weaver", "water_carrier"],
       "journal_entry": "Community Resilience: Daily life depended on many connected forms of work, knowledge, exchange, and mutual care."
+    },
+    "prologue_collect_memories": {
+      "title": "Traces of Everyday Life",
+      "narrative_goal": "Find objects that reveal how ordinary skills and exchange connect the village.",
+      "historical_context": "Material culture, such as tools, containers, and trade goods, can reveal how people worked, travelled, and exchanged knowledge.",
+      "objectives": ["Collect the Woven Basket.", "Collect the Trade Beads.", "Collect the Farming Tool."],
+      "required_items": ["woven_basket", "trade_beads", "farming_tool"],
+      "journal_entry": "Everyday Objects: Tools and crafted objects can hold stories about work, exchange, skill, and community life."
     }
   }
 }

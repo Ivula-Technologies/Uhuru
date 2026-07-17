@@ -23,8 +23,10 @@ def check_project_layout() -> None:
         "scenes/player/Player.tscn",
         "scripts/save/save_game.gd",
         "scripts/quests/quest_manager.gd",
+        "scripts/inventory/inventory_manager.gd",
         "scripts/ui/dialogue_panel.gd",
         "scripts/npc/village_npc.gd",
+        "scripts/world/collectible.gd",
     ]
     missing = [path for path in required_files if not (ROOT / path).is_file()]
     assert not missing, f"Missing required project files: {', '.join(missing)}"
@@ -56,8 +58,19 @@ def check_npc_data() -> None:
     assert len(choice_ids) == len(set(choice_ids)), "Dialogue choice IDs must be unique."
 
 
+def check_collectible_data() -> None:
+    collectibles = load_json("data/collectibles/prologue.json").get("collectibles", [])
+    assert len(collectibles) >= 3, "The Prologue needs at least three collectibles."
+    item_ids = [item.get("id") for item in collectibles]
+    assert len(item_ids) == len(set(item_ids)), "Collectible IDs must be unique."
+    for item in collectibles:
+        assert item.get("display_name"), "Every collectible needs a display name."
+        assert len(item.get("position", [])) == 2, f"{item['id']} needs a 2D position."
+        assert item.get("journal_entry"), f"{item['id']} needs a journal entry."
+
+
 def main() -> int:
-    checks = [check_project_layout, check_quest_data, check_npc_data]
+    checks = [check_project_layout, check_quest_data, check_npc_data, check_collectible_data]
     for check in checks:
         check()
         print(f"PASS {check.__name__}")

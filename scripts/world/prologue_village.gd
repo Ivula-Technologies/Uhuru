@@ -1,10 +1,12 @@
 extends Node2D
 
 const NPC_SCRIPT := preload("res://scripts/npc/village_npc.gd")
+const COLLECTIBLE_SCRIPT := preload("res://scripts/world/collectible.gd")
 
 var player: CharacterBody2D
 var journal_panel: RichTextLabel
 var quest_panel: RichTextLabel
+var inventory_panel: RichTextLabel
 var prompt: Label
 var dialogue: DialoguePanel
 var dialogue_open := false
@@ -17,10 +19,12 @@ func _ready() -> void:
 	_build_world_boundaries()
 	_build_player()
 	_spawn_villagers()
+	_spawn_collectibles()
 	_build_hud()
 	_build_dialogue()
 	_build_intro_cutscene()
 	QuestManager.quest_completed.connect(_on_quest_completed)
+	InventoryManager.item_added.connect(_on_item_added)
 	if not SaveGame.has_seen_cutscene("prologue_arrival"):
 		player.movement_enabled = false
 		intro_cutscene.show_sequence([
@@ -77,6 +81,20 @@ func _spawn_villagers() -> void:
 		npc.interaction_requested.connect(_on_npc_interaction_requested)
 		add_child(npc)
 
+func _spawn_collectibles() -> void:
+	var file := FileAccess.open("res://data/collectibles/prologue.json", FileAccess.READ)
+	var content: Dictionary = JSON.parse_string(file.get_as_text())
+	for item in content.get("collectibles", []):
+		var profile: Dictionary = item
+		if InventoryManager.has_item(profile.get("id", "")):
+			continue
+		var collectible: Collectible = COLLECTIBLE_SCRIPT.new()
+		collectible.setup(profile)
+		var location: Array = profile.get("position", [0, 0])
+		collectible.position = Vector2(location[0], location[1])
+		collectible.interaction_requested.connect(_on_collectible_interaction_requested)
+		add_child(collectible)
+
 func _build_player() -> void:
 	player = preload("res://scenes/player/Player.tscn").instantiate()
 	player.position = Vector2(220, 530)
@@ -122,8 +140,16 @@ func _build_hud() -> void:
 	quest_panel.visible = false
 	quest_panel.add_theme_font_size_override("normal_font_size", 16)
 	layer.add_child(quest_panel)
+	inventory_panel = RichTextLabel.new()
+	inventory_panel.bbcode_enabled = true
+	inventory_panel.position = Vector2(890, 105)
+	inventory_panel.size = Vector2(350, 245)
+	inventory_panel.visible = false
+	inventory_panel.add_theme_font_size_override("normal_font_size", 16)
+	layer.add_child(inventory_panel)
 	_refresh_journal()
 	_refresh_quest_log()
+	_refresh_inventory()
 
 func _build_dialogue() -> void:
 	dialogue = DialoguePanel.new()
@@ -138,15 +164,28 @@ func _build_intro_cutscene() -> void:
 
 func _process(_delta: float) -> void:
 	nearby_npc = _get_nearby_npc()
-	prompt.text = "[E] Speak with " + nearby_npc.profile.get("display_name", "villager") if nearby_npc else "Explore the village."
+	var nearby_collectible := _get_nearby_collectible()
+	if nearby_npc:
+		prompt.text = "[E] Speak with " + nearby_npc.profile.get("display_name", "villager")
+	elif nearby_collectible:
+		prompt.text = "[E] Collect " + nearby_collectible.profile.get("display_name", "object")
+	else:
+		prompt.text = "Explore the village."
 	if nearby_npc and not dialogue_open and Input.is_action_just_pressed("interact"):
 		nearby_npc.interact()
+	elif nearby_collectible and not dialogue_open and Input.is_action_just_pressed("interact"):
+		nearby_collectible.interact()
 	if Input.is_action_just_pressed("journal"):
 		journal_panel.visible = not journal_panel.visible
 		quest_panel.visible = false
 	if Input.is_action_just_pressed("quest_log"):
 		quest_panel.visible = not quest_panel.visible
 		journal_panel.visible = false
+		inventory_panel.visible = false
+	if Input.is_action_just_pressed("inventory"):
+		inventory_panel.visible = not inventory_panel.visible
+		journal_panel.visible = false
+		quest_panel.visible = false
 	if Input.is_key_pressed(KEY_ESCAPE) and not dialogue_open:
 		get_tree().change_scene_to_file("res://scenes/menus/TitleScreen.tscn")
 
@@ -155,6 +194,13 @@ func _get_nearby_npc() -> VillageNPC:
 		var npc := node as VillageNPC
 		if npc.player_near:
 			return npc
+	return null
+
+func _get_nearby_collectible() -> Collectible:
+	for node in get_tree().get_nodes_in_group("interactable"):
+		var collectible := node as Collectible
+		if collectible and collectible.player_near:
+			return collectible
 	return null
 
 func _on_npc_interaction_requested(npc: VillageNPC) -> void:
@@ -171,6 +217,14 @@ func _on_npc_interaction_requested(npc: VillageNPC) -> void:
 	if not journal_entry.is_empty():
 		SaveGame.add_journal_entry(journal_entry)
 		_refresh_journal()
+
+func _on_collectible_interaction_requested(collectible: Collectible) -> void:
+	collectible.collect()
+
+func _on_item_added(_item_id: String) -> void:
+	_refresh_inventory()
+	_refresh_journal()
+	_refresh_quest_log()
 
 func _on_quest_completed(_quest_id: String) -> void:
 	_refresh_journal()
@@ -201,3 +255,18 @@ func _refresh_quest_log() -> void:
 		for objective in quest.get("objectives", []):
 			lines.append("- " + objective)
 	quest_panel.text = "\n".join(lines)
+
+func _refresh_inventory() -> void:
+	var names: Dictionary = {}
+	var file := FileAccess.open("res://data/collectibles/prologue.json", FileAccess.READ)
+	var content: Dictionary = JSON.parse_string(file.get_as_text())
+	for item in content.get("collectibles", []):
+		names[item.get("id", "")] = item.get("display_name", "Object")
+	var item_ids: Array = SaveGame.data.get("inventory", [])
+	var lines: Array[String] = ["[b]INVENTORY[/b]"]
+	if item_ids.is_empty():
+		lines.append("\nNo objects collected yet.")
+	else:
+		for item_id in item_ids:
+			lines.append("\n- " + names.get(item_id, item_id))
+	inventory_panel.text = "\n".join(lines)

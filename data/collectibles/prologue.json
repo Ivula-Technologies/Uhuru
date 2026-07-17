@@ -1,0 +1,25 @@
+{
+  "collectibles": [
+    {
+      "id": "woven_basket",
+      "display_name": "Woven Basket",
+      "position": [320, 575],
+      "color": "bd8b4a",
+      "journal_entry": "Woven Basket: Crafted containers supported storage, travel, and exchange in many communities."
+    },
+    {
+      "id": "trade_beads",
+      "display_name": "Trade Beads",
+      "position": [1130, 395],
+      "color": "d26c69",
+      "journal_entry": "Trade Beads: Small goods can travel through networks of exchange, carrying value and connection between communities."
+    },
+    {
+      "id": "farming_tool",
+      "display_name": "Farming Tool",
+      "position": [735, 620],
+      "color": "c5b58b",
+      "journal_entry": "Farming Tool: Work with soil, crops, and seasonal knowledge supported family and community life."
+    }
+  ]
+}

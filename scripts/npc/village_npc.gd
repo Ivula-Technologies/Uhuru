@@ -13,6 +13,7 @@ func setup(new_profile: Dictionary) -> void:
 
 func _ready() -> void:
 	add_to_group("village_npc")
+	add_to_group("interactable")
 	monitoring = true
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
