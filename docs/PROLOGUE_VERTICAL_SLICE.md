@@ -15,4 +15,4 @@ The first playable milestone is a small pre-colonial village where the player ca
 ## Next implementation tasks
 
 1. Replace placeholder shapes with reviewed hand-painted assets.
-2. Add automated regression tests for save/load, dialogue choices, and quest completion.
+2. Add Godot runtime tests for save/load, dialogue choices, and quest completion. The JSON/project-layout checks are available in `tests/validate_content.py`.
