@@ -17,6 +17,8 @@ func _ready() -> void:
 	monitoring = true
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	TimeOfDay.time_changed.connect(_on_time_changed)
+	_apply_schedule(TimeOfDay.get_phase())
 	var shape := CollisionShape2D.new()
 	var circle := CircleShape2D.new()
 	circle.radius = 74.0
@@ -46,3 +48,12 @@ func _on_body_entered(body: Node2D) -> void:
 func _on_body_exited(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		player_near = false
+
+func _on_time_changed(_hour: float, phase: String) -> void:
+	_apply_schedule(phase)
+
+func _apply_schedule(phase: String) -> void:
+	var schedule: Dictionary = profile.get("schedule", {})
+	var destination: Array = schedule.get(phase, [])
+	if destination.size() == 2:
+		position = Vector2(destination[0], destination[1])

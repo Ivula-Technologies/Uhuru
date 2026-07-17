@@ -16,6 +16,7 @@
       "display_name": "Farmer",
       "position": [690, 520],
       "color": "94723d",
+      "schedule": {"dawn": [690, 520], "day": [660, 545], "dusk": [690, 520], "night": [700, 480]},
       "dialogue": {
         "text": "A good harvest depends on patience, rain, soil, and many hands. What a family grows is shared through work, exchange, and care.",
         "choices": [{"id": "ask_about_crops", "text": "What do you grow?"}, {"id": "thank_farmer", "text": "Thank you for teaching me."}]
@@ -27,6 +28,7 @@
       "display_name": "Trader",
       "position": [1010, 505],
       "color": "3e5c69",
+      "schedule": {"dawn": [1010, 505], "day": [1040, 475], "dusk": [1010, 505], "night": [980, 520]},
       "dialogue": {
         "text": "News travels with people as surely as goods do. Paths connect villages, markets, and distant communities; trade carries skills, stories, and relationships.",
         "choices": [{"id": "ask_about_routes", "text": "Where do the paths lead?"}, {"id": "wish_safe_travels", "text": "Safe travels."}]
@@ -38,6 +40,7 @@
       "display_name": "Young Weaver",
       "position": [890, 350],
       "color": "a55a51",
+      "schedule": {"dawn": [890, 350], "day": [860, 370], "dusk": [890, 350], "night": [910, 390]},
       "dialogue": {
         "text": "Every pattern takes time. I learn by watching older hands, then by making mistakes of my own. Skills are carried forward when people teach one another.",
         "choices": [{"id": "ask_to_learn", "text": "Will you show me?"}, {"id": "praise_craft", "text": "Your work is beautiful."}]
@@ -49,6 +52,7 @@
       "display_name": "Water Carrier",
       "position": [575, 330],
       "color": "4d7890",
+      "schedule": {"dawn": [575, 330], "day": [545, 360], "dusk": [575, 330], "night": [600, 350]},
       "dialogue": {
         "text": "Water shapes the rhythm of a day. We protect the places that sustain us, and we learn which paths are safe in every season.",
         "choices": [{"id": "ask_about_water", "text": "How do you care for the water?"}, {"id": "offer_help", "text": "May I help carry it?"}]

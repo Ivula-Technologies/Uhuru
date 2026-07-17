@@ -56,6 +56,10 @@ def check_npc_data() -> None:
         for choice in dialogue.get("choices", []):
             assert choice.get("id") and choice.get("text"), f"{npc['id']} has an invalid choice."
             choice_ids.append(choice["id"])
+        schedule = npc.get("schedule", {})
+        for phase, position in schedule.items():
+            assert phase in {"dawn", "day", "dusk", "night"}, f"{npc['id']} has an invalid phase."
+            assert len(position) == 2, f"{npc['id']} has an invalid {phase} schedule position."
     assert len(choice_ids) == len(set(choice_ids)), "Dialogue choice IDs must be unique."
 
 
