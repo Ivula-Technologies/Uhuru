@@ -37,3 +37,18 @@ func complete_quest(quest_id: String) -> void:
 	SaveGame.complete_quest(quest_id)
 	SaveGame.add_journal_entry(quest.get("journal_entry", ""))
 	quest_completed.emit(quest_id)
+
+func evaluate_npc_visit(npc_id: String) -> void:
+	SaveGame.mark_npc_visited(npc_id)
+	for quest_id in quests:
+		var quest: Dictionary = quests[quest_id]
+		var required_npcs: Array = quest.get("required_npcs", [])
+		if required_npcs.is_empty() or SaveGame.has_completed_quest(quest_id):
+			continue
+		var all_visited := true
+		for required_npc in required_npcs:
+			if not SaveGame.has_visited_npc(required_npc):
+				all_visited = false
+				break
+		if all_visited:
+			complete_quest(quest_id)

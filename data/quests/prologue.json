@@ -6,6 +6,14 @@
       "historical_context": "Kenyan societies had diverse systems of farming, grazing, trade, and local governance before colonial rule.",
       "objectives": ["Speak with the Village Elder."],
       "journal_entry": "Village Elder: Before new borders and railways, communities governed land, trade, and family life through their own traditions."
+    },
+    "prologue_meet_the_village": {
+      "title": "Voices of the Village",
+      "narrative_goal": "Listen to the people whose work, knowledge, and care sustain the community.",
+      "historical_context": "Pre-colonial Kenyan societies were diverse, with community life shaped by farming, craft, exchange, and shared responsibilities.",
+      "objectives": ["Speak with the Farmer.", "Speak with the Trader.", "Speak with the Young Weaver.", "Speak with the Water Carrier."],
+      "required_npcs": ["farmer", "trader", "weaver", "water_carrier"],
+      "journal_entry": "Community Resilience: Daily life depended on many connected forms of work, knowledge, exchange, and mutual care."
     }
   }
 }

@@ -10,6 +10,7 @@ The first playable milestone is a small pre-colonial village where the player ca
 - JSON-driven dialogue and quest content.
 - Quest completion updates the persistent journal.
 - Quest log (`Q`), journal/codex (`J`), dialogue portraits, and saved player choices.
+- Opening cutscene and an exploration quest that completes after meeting four working villagers.
 - Persistent save data includes a schema version, completed quests, journal entries, and settings.
 
 ## Next implementation tasks

@@ -43,6 +43,17 @@
         "choices": [{"id": "ask_to_learn", "text": "Will you show me?"}, {"id": "praise_craft", "text": "Your work is beautiful."}]
       },
       "journal_entry": "Knowledge and Craft: Practical knowledge is passed between generations through observation, practice, and community teaching."
+    },
+    {
+      "id": "water_carrier",
+      "display_name": "Water Carrier",
+      "position": [575, 330],
+      "color": "4d7890",
+      "dialogue": {
+        "text": "Water shapes the rhythm of a day. We protect the places that sustain us, and we learn which paths are safe in every season.",
+        "choices": [{"id": "ask_about_water", "text": "How do you care for the water?"}, {"id": "offer_help", "text": "May I help carry it?"}]
+      },
+      "journal_entry": "Water and Place: Access to water, seasonal knowledge, and careful stewardship were central to everyday life across many communities."
     }
   ]
 }

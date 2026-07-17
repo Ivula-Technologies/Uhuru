@@ -10,6 +10,7 @@ var dialogue: DialoguePanel
 var dialogue_open := false
 var nearby_npc: VillageNPC
 var speaking_npc_id := ""
+var intro_cutscene: IntroCutscene
 
 func _ready() -> void:
 	_build_environment()
@@ -18,7 +19,14 @@ func _ready() -> void:
 	_spawn_villagers()
 	_build_hud()
 	_build_dialogue()
+	_build_intro_cutscene()
 	QuestManager.quest_completed.connect(_on_quest_completed)
+	if not SaveGame.has_seen_cutscene("prologue_arrival"):
+		player.movement_enabled = false
+		intro_cutscene.show_sequence([
+			"Before borders, railways, and colonial rule, communities across this land shaped their own lives, traditions, and futures.",
+			"At dawn, you wake in your village. The paths ahead begin with listening."
+		])
 
 func _build_environment() -> void:
 	var sky := ColorRect.new()
@@ -123,6 +131,11 @@ func _build_dialogue() -> void:
 	dialogue.choice_selected.connect(_on_dialogue_choice_selected)
 	add_child(dialogue)
 
+func _build_intro_cutscene() -> void:
+	intro_cutscene = IntroCutscene.new()
+	intro_cutscene.finished.connect(_on_intro_cutscene_finished)
+	add_child(intro_cutscene)
+
 func _process(_delta: float) -> void:
 	nearby_npc = _get_nearby_npc()
 	prompt.text = "[E] Speak with " + nearby_npc.profile.get("display_name", "villager") if nearby_npc else "Explore the village."
@@ -151,6 +164,7 @@ func _on_npc_interaction_requested(npc: VillageNPC) -> void:
 	var line: Dictionary = npc.profile.get("dialogue", {})
 	dialogue.show_line(npc.profile.get("display_name", "Villager"), line.get("text", ""), line.get("choices", []), Color(npc.profile.get("color", "684838")))
 	var quest_id: String = npc.profile.get("quest_id", "")
+	QuestManager.evaluate_npc_visit(npc.npc_id)
 	if not quest_id.is_empty():
 		QuestManager.complete_quest(quest_id)
 	var journal_entry: String = npc.profile.get("journal_entry", "")
@@ -167,6 +181,10 @@ func _on_dialogue_choice_selected(choice_id: String) -> void:
 	if not speaking_npc_id.is_empty():
 		SaveGame.record_choice(speaking_npc_id, choice_id)
 	speaking_npc_id = ""
+
+func _on_intro_cutscene_finished() -> void:
+	SaveGame.mark_cutscene_seen("prologue_arrival")
+	player.movement_enabled = true
 
 func _refresh_journal() -> void:
 	var entries: Array = SaveGame.data.get("journal", [])

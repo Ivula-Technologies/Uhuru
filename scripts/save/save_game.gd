@@ -15,6 +15,8 @@ func _default_data() -> Dictionary:
 		"journal": ["You have arrived in the village at dawn."],
 		"completed_quests": [],
 		"choices": {},
+		"visited_npcs": [],
+		"seen_cutscenes": [],
 		"settings": {"music_volume": 75.0, "text_speed": 1.0}
 	}
 
@@ -55,3 +57,23 @@ func record_choice(choice_key: String, choice_id: String) -> void:
 	choices[choice_key] = choice_id
 	data["choices"] = choices
 	save_game()
+
+func mark_npc_visited(npc_id: String) -> void:
+	var visited: Array = data.get("visited_npcs", [])
+	if not visited.has(npc_id):
+		visited.append(npc_id)
+		data["visited_npcs"] = visited
+		save_game()
+
+func has_visited_npc(npc_id: String) -> bool:
+	return data.get("visited_npcs", []).has(npc_id)
+
+func has_seen_cutscene(cutscene_id: String) -> bool:
+	return data.get("seen_cutscenes", []).has(cutscene_id)
+
+func mark_cutscene_seen(cutscene_id: String) -> void:
+	var seen: Array = data.get("seen_cutscenes", [])
+	if not seen.has(cutscene_id):
+		seen.append(cutscene_id)
+		data["seen_cutscenes"] = seen
+		save_game()
