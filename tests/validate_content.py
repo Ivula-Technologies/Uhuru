@@ -24,6 +24,7 @@ def check_project_layout() -> None:
         "scripts/save/save_game.gd",
         "scripts/quests/quest_manager.gd",
         "scripts/inventory/inventory_manager.gd",
+        "scripts/systems/time_of_day.gd",
         "scripts/ui/dialogue_panel.gd",
         "scripts/npc/village_npc.gd",
         "scripts/world/collectible.gd",

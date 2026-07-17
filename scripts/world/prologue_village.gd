@@ -8,6 +8,8 @@ var journal_panel: RichTextLabel
 var quest_panel: RichTextLabel
 var inventory_panel: RichTextLabel
 var prompt: Label
+var clock_label: Label
+var world_tint: CanvasModulate
 var dialogue: DialoguePanel
 var dialogue_open := false
 var nearby_npc: VillageNPC
@@ -25,6 +27,8 @@ func _ready() -> void:
 	_build_intro_cutscene()
 	QuestManager.quest_completed.connect(_on_quest_completed)
 	InventoryManager.item_added.connect(_on_item_added)
+	TimeOfDay.time_changed.connect(_on_time_changed)
+	_on_time_changed(TimeOfDay.hour, TimeOfDay.get_phase())
 	if not SaveGame.has_seen_cutscene("prologue_arrival"):
 		player.movement_enabled = false
 		intro_cutscene.show_sequence([
@@ -52,6 +56,9 @@ func _build_environment() -> void:
 	hut.polygon = PackedVector2Array([Vector2(780, 450), Vector2(1080, 450), Vector2(1035, 570), Vector2(825, 570), Vector2(930, 330)])
 	hut.color = Color("a4643e")
 	add_child(hut)
+	world_tint = CanvasModulate.new()
+	world_tint.color = Color.WHITE
+	add_child(world_tint)
 
 func _build_world_boundaries() -> void:
 	_add_wall(Vector2(640, 76), Vector2(1280, 32))
@@ -126,6 +133,10 @@ func _build_hud() -> void:
 	help.text = "WASD / Arrows: move   Shift: run   E: interact   J: journal   Esc: title"
 	help.position = Vector2(28, 680)
 	layer.add_child(help)
+	clock_label = Label.new()
+	clock_label.position = Vector2(1110, 28)
+	clock_label.add_theme_font_size_override("font_size", 20)
+	layer.add_child(clock_label)
 	journal_panel = RichTextLabel.new()
 	journal_panel.bbcode_enabled = true
 	journal_panel.position = Vector2(890, 105)
@@ -239,6 +250,18 @@ func _on_dialogue_choice_selected(choice_id: String) -> void:
 func _on_intro_cutscene_finished() -> void:
 	SaveGame.mark_cutscene_seen("prologue_arrival")
 	player.movement_enabled = true
+
+func _on_time_changed(_hour: float, phase: String) -> void:
+	clock_label.text = TimeOfDay.get_clock_text() + "  " + phase.capitalize()
+	match phase:
+		"dawn":
+			world_tint.color = Color("f0c59b")
+		"day":
+			world_tint.color = Color.WHITE
+		"dusk":
+			world_tint.color = Color("d59a91")
+		"night":
+			world_tint.color = Color("62719b")
 
 func _refresh_journal() -> void:
 	var entries: Array = SaveGame.data.get("journal", [])

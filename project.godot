@@ -9,6 +9,7 @@ config/features=PackedStringArray("4.3", "GL Compatibility")
 SaveGame="*res://scripts/save/save_game.gd"
 QuestManager="*res://scripts/quests/quest_manager.gd"
 InventoryManager="*res://scripts/inventory/inventory_manager.gd"
+TimeOfDay="*res://scripts/systems/time_of_day.gd"
 
 [display]
 window/size/viewport_width=1280
