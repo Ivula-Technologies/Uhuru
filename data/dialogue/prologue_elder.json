@@ -1,0 +1,8 @@
+{
+  "speaker": "Village Elder",
+  "text": "Our land remembers the hands that farm it, the paths traders walk, and the families who care for one another. Before strangers arrive, listen closely to what already lives here.",
+  "choices": [
+    {"text": "Tell me about our land."},
+    {"text": "I will listen."}
+  ]
+}

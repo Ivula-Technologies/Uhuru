@@ -1,0 +1,48 @@
+{
+  "npcs": [
+    {
+      "id": "village_elder",
+      "display_name": "Village Elder",
+      "position": [405, 420],
+      "color": "684838",
+      "quest_id": "prologue_speak_to_elder",
+      "dialogue": {
+        "text": "Our land remembers the hands that farm it, the paths traders walk, and the families who care for one another. Before strangers arrive, listen closely to what already lives here.",
+        "choices": [{"text": "Tell me about our land."}, {"text": "I will listen."}]
+      }
+    },
+    {
+      "id": "farmer",
+      "display_name": "Farmer",
+      "position": [690, 520],
+      "color": "94723d",
+      "dialogue": {
+        "text": "A good harvest depends on patience, rain, soil, and many hands. What a family grows is shared through work, exchange, and care.",
+        "choices": [{"text": "What do you grow?"}, {"text": "Thank you for teaching me."}]
+      },
+      "journal_entry": "Village Life: Farming, grazing, and trade supported communities long before colonial rule. Practices differed across Kenya's regions and environments."
+    },
+    {
+      "id": "trader",
+      "display_name": "Trader",
+      "position": [1010, 505],
+      "color": "3e5c69",
+      "dialogue": {
+        "text": "News travels with people as surely as goods do. Paths connect villages, markets, and distant communities; trade carries skills, stories, and relationships.",
+        "choices": [{"text": "Where do the paths lead?"}, {"text": "Safe travels."}]
+      },
+      "journal_entry": "Trade and Exchange: Communities across the region maintained networks of exchange, communication, and travel."
+    },
+    {
+      "id": "weaver",
+      "display_name": "Young Weaver",
+      "position": [890, 350],
+      "color": "a55a51",
+      "dialogue": {
+        "text": "Every pattern takes time. I learn by watching older hands, then by making mistakes of my own. Skills are carried forward when people teach one another.",
+        "choices": [{"text": "Will you show me?"}, {"text": "Your work is beautiful."}]
+      },
+      "journal_entry": "Knowledge and Craft: Practical knowledge is passed between generations through observation, practice, and community teaching."
+    }
+  ]
+}

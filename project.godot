@@ -1,0 +1,44 @@
+config_version=5
+
+[application]
+config/name="Uhuru: Eyes of the Land"
+run/main_scene="res://scenes/menus/TitleScreen.tscn"
+config/features=PackedStringArray("4.3", "GL Compatibility")
+
+[autoload]
+SaveGame="*res://scripts/save/save_game.gd"
+QuestManager="*res://scripts/quests/quest_manager.gd"
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[input]
+move_up={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":87), Object(InputEventKey,"physical_keycode":4194320)]
+}
+move_down={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":83), Object(InputEventKey,"physical_keycode":4194322)]
+}
+move_left={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":65), Object(InputEventKey,"physical_keycode":4194319)]
+}
+move_right={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":68), Object(InputEventKey,"physical_keycode":4194321)]
+}
+interact={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":69)]
+}
+journal={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":74)]
+}
+
+[rendering]
+renderer/rendering_method="gl_compatibility"

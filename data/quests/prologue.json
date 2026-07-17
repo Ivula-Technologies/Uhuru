@@ -1,0 +1,11 @@
+{
+  "quests": {
+    "prologue_speak_to_elder": {
+      "title": "Listen to the Land",
+      "narrative_goal": "Learn how village life is sustained by land, work, and community.",
+      "historical_context": "Kenyan societies had diverse systems of farming, grazing, trade, and local governance before colonial rule.",
+      "objectives": ["Speak with the Village Elder."],
+      "journal_entry": "Village Elder: Before new borders and railways, communities governed land, trade, and family life through their own traditions."
+    }
+  }
+}

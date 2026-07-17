@@ -1,0 +1,12 @@
+# Godot generated files
+.godot/
+*.import
+
+# Exported builds and user-specific files
+build/
+export/
+*.tmp
+
+# Editor settings
+.vscode/
+.idea/

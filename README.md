@@ -1,21 +1,13 @@
 # Uhuru: Eyes of the Land
 
-Genre
-Educational Adventure RPG
+A narrative adventure RPG about Kenya's history as experienced by families and communities.
 
-Engine
-Godot 4
+## Run
 
-Platform
-Windows, Linux, Web
+1. Install Godot 4.3 or later.
+2. Import `project.godot` in the Godot Project Manager.
+3. Run the project and select **Begin the Prologue**.
 
-Story
-An educational adventure following a Kenyan family from the late 19th century through colonial rule, the Mau Mau uprising, independence, and the early years of nation building.
+This foundation includes a title screen, persistent settings/save data, a playable pre-colonial village vignette, movement, an elder interaction, and a journal discovery.
 
-Gameplay
-- Exploration
-- Dialogue
-- Quests
-- Historical documents
-- Decision-based conversations
-- Collectibles
+Controls: `WASD` or arrow keys to move, `Shift` to run, `E` to interact, `Esc` to return to the title screen.
