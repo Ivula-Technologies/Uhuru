@@ -2,11 +2,13 @@ class_name DialoguePanel
 extends CanvasLayer
 
 signal dialogue_finished
+signal choice_selected(choice_id: String)
 
 var speaker_label: Label
 var body_label: RichTextLabel
 var choice_box: VBoxContainer
 var panel: PanelContainer
+var portrait: Label
 
 func _ready() -> void:
 	layer = 10
@@ -16,9 +18,20 @@ func _ready() -> void:
 	panel.size = Vector2(1140, 210)
 	panel.visible = false
 	add_child(panel)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 18)
+	panel.add_child(row)
+	portrait = Label.new()
+	portrait.custom_minimum_size = Vector2(140, 150)
+	portrait.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	portrait.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	portrait.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	portrait.add_theme_font_size_override("font_size", 22)
+	row.add_child(portrait)
 	var content := VBoxContainer.new()
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_theme_constant_override("separation", 8)
-	panel.add_child(content)
+	row.add_child(content)
 	speaker_label = Label.new()
 	speaker_label.add_theme_font_size_override("font_size", 24)
 	content.add_child(speaker_label)
@@ -32,17 +45,21 @@ func _ready() -> void:
 	choice_box = VBoxContainer.new()
 	content.add_child(choice_box)
 
-func show_line(speaker: String, text_value: String, choices: Array = []) -> void:
+func show_line(speaker: String, text_value: String, choices: Array = [], portrait_color := Color("684838")) -> void:
 	panel.visible = true
 	speaker_label.text = speaker
 	body_label.text = text_value
+	portrait.text = speaker
+	portrait.add_theme_color_override("font_color", portrait_color)
 	for child in choice_box.get_children():
 		child.queue_free()
 	if choices.is_empty():
 		_add_choice("Continue", _finish)
 		return
-	for choice in choices:
-		_add_choice(choice.get("text", "Continue"), _finish)
+	for index in choices.size():
+		var choice: Dictionary = choices[index]
+		var choice_id: String = choice.get("id", "choice_" + str(index))
+		_add_choice(choice.get("text", "Continue"), _select_choice.bind(choice_id))
 
 func _add_choice(text_value: String, callback: Callable) -> void:
 	var button := Button.new()
@@ -54,3 +71,7 @@ func _add_choice(text_value: String, callback: Callable) -> void:
 func _finish() -> void:
 	panel.visible = false
 	dialogue_finished.emit()
+
+func _select_choice(choice_id: String) -> void:
+	choice_selected.emit(choice_id)
+	_finish()

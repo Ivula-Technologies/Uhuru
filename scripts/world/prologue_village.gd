@@ -4,10 +4,12 @@ const NPC_SCRIPT := preload("res://scripts/npc/village_npc.gd")
 
 var player: CharacterBody2D
 var journal_panel: RichTextLabel
+var quest_panel: RichTextLabel
 var prompt: Label
 var dialogue: DialoguePanel
 var dialogue_open := false
 var nearby_npc: VillageNPC
+var speaking_npc_id := ""
 
 func _ready() -> void:
 	_build_environment()
@@ -105,11 +107,20 @@ func _build_hud() -> void:
 	journal_panel.visible = false
 	journal_panel.add_theme_font_size_override("normal_font_size", 16)
 	layer.add_child(journal_panel)
+	quest_panel = RichTextLabel.new()
+	quest_panel.bbcode_enabled = true
+	quest_panel.position = Vector2(890, 105)
+	quest_panel.size = Vector2(350, 245)
+	quest_panel.visible = false
+	quest_panel.add_theme_font_size_override("normal_font_size", 16)
+	layer.add_child(quest_panel)
 	_refresh_journal()
+	_refresh_quest_log()
 
 func _build_dialogue() -> void:
 	dialogue = DialoguePanel.new()
 	dialogue.dialogue_finished.connect(func(): dialogue_open = false; player.movement_enabled = true)
+	dialogue.choice_selected.connect(_on_dialogue_choice_selected)
 	add_child(dialogue)
 
 func _process(_delta: float) -> void:
@@ -119,6 +130,10 @@ func _process(_delta: float) -> void:
 		nearby_npc.interact()
 	if Input.is_action_just_pressed("journal"):
 		journal_panel.visible = not journal_panel.visible
+		quest_panel.visible = false
+	if Input.is_action_just_pressed("quest_log"):
+		quest_panel.visible = not quest_panel.visible
+		journal_panel.visible = false
 	if Input.is_key_pressed(KEY_ESCAPE) and not dialogue_open:
 		get_tree().change_scene_to_file("res://scenes/menus/TitleScreen.tscn")
 
@@ -132,8 +147,9 @@ func _get_nearby_npc() -> VillageNPC:
 func _on_npc_interaction_requested(npc: VillageNPC) -> void:
 	dialogue_open = true
 	player.movement_enabled = false
+	speaking_npc_id = npc.npc_id
 	var line: Dictionary = npc.profile.get("dialogue", {})
-	dialogue.show_line(npc.profile.get("display_name", "Villager"), line.get("text", ""), line.get("choices", []))
+	dialogue.show_line(npc.profile.get("display_name", "Villager"), line.get("text", ""), line.get("choices", []), Color(npc.profile.get("color", "684838")))
 	var quest_id: String = npc.profile.get("quest_id", "")
 	if not quest_id.is_empty():
 		QuestManager.complete_quest(quest_id)
@@ -144,8 +160,26 @@ func _on_npc_interaction_requested(npc: VillageNPC) -> void:
 
 func _on_quest_completed(_quest_id: String) -> void:
 	_refresh_journal()
+	_refresh_quest_log()
 	journal_panel.visible = true
+
+func _on_dialogue_choice_selected(choice_id: String) -> void:
+	if not speaking_npc_id.is_empty():
+		SaveGame.record_choice(speaking_npc_id, choice_id)
+	speaking_npc_id = ""
 
 func _refresh_journal() -> void:
 	var entries: Array = SaveGame.data.get("journal", [])
 	journal_panel.text = "[b]JOURNAL & CODEX[/b]\n\n" + "\n\n".join(entries)
+
+func _refresh_quest_log() -> void:
+	var active: Array = QuestManager.get_active_quests()
+	if active.is_empty():
+		quest_panel.text = "[b]QUEST LOG[/b]\n\nNo active quests. Explore the village and speak with its people."
+		return
+	var lines: Array[String] = ["[b]QUEST LOG[/b]"]
+	for quest: Dictionary in active:
+		lines.append("\n[b]" + quest.get("title", "Quest") + "[/b]\n" + quest.get("narrative_goal", ""))
+		for objective in quest.get("objectives", []):
+			lines.append("- " + objective)
+	quest_panel.text = "\n".join(lines)

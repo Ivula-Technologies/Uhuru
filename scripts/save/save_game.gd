@@ -14,6 +14,7 @@ func _default_data() -> Dictionary:
 		"chapter": "prologue",
 		"journal": ["You have arrived in the village at dawn."],
 		"completed_quests": [],
+		"choices": {},
 		"settings": {"music_volume": 75.0, "text_speed": 1.0}
 	}
 
@@ -48,3 +49,9 @@ func complete_quest(quest_id: String) -> void:
 		completed.append(quest_id)
 		data["completed_quests"] = completed
 		save_game()
+
+func record_choice(choice_key: String, choice_id: String) -> void:
+	var choices: Dictionary = data.get("choices", {})
+	choices[choice_key] = choice_id
+	data["choices"] = choices
+	save_game()

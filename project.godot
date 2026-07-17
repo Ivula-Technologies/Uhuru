@@ -39,6 +39,10 @@ journal={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"physical_keycode":74)]
 }
+quest_log={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":81)]
+}
 
 [rendering]
 renderer/rendering_method="gl_compatibility"

@@ -8,7 +8,7 @@
       "quest_id": "prologue_speak_to_elder",
       "dialogue": {
         "text": "Our land remembers the hands that farm it, the paths traders walk, and the families who care for one another. Before strangers arrive, listen closely to what already lives here.",
-        "choices": [{"text": "Tell me about our land."}, {"text": "I will listen."}]
+        "choices": [{"id": "ask_about_land", "text": "Tell me about our land."}, {"id": "listen", "text": "I will listen."}]
       }
     },
     {
@@ -18,7 +18,7 @@
       "color": "94723d",
       "dialogue": {
         "text": "A good harvest depends on patience, rain, soil, and many hands. What a family grows is shared through work, exchange, and care.",
-        "choices": [{"text": "What do you grow?"}, {"text": "Thank you for teaching me."}]
+        "choices": [{"id": "ask_about_crops", "text": "What do you grow?"}, {"id": "thank_farmer", "text": "Thank you for teaching me."}]
       },
       "journal_entry": "Village Life: Farming, grazing, and trade supported communities long before colonial rule. Practices differed across Kenya's regions and environments."
     },
@@ -29,7 +29,7 @@
       "color": "3e5c69",
       "dialogue": {
         "text": "News travels with people as surely as goods do. Paths connect villages, markets, and distant communities; trade carries skills, stories, and relationships.",
-        "choices": [{"text": "Where do the paths lead?"}, {"text": "Safe travels."}]
+        "choices": [{"id": "ask_about_routes", "text": "Where do the paths lead?"}, {"id": "wish_safe_travels", "text": "Safe travels."}]
       },
       "journal_entry": "Trade and Exchange: Communities across the region maintained networks of exchange, communication, and travel."
     },
@@ -40,7 +40,7 @@
       "color": "a55a51",
       "dialogue": {
         "text": "Every pattern takes time. I learn by watching older hands, then by making mistakes of my own. Skills are carried forward when people teach one another.",
-        "choices": [{"text": "Will you show me?"}, {"text": "Your work is beautiful."}]
+        "choices": [{"id": "ask_to_learn", "text": "Will you show me?"}, {"id": "praise_craft", "text": "Your work is beautiful."}]
       },
       "journal_entry": "Knowledge and Craft: Practical knowledge is passed between generations through observation, practice, and community teaching."
     }

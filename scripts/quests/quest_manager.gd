@@ -20,6 +20,13 @@ func _load_quests() -> void:
 func get_quest(quest_id: String) -> Dictionary:
 	return quests.get(quest_id, {})
 
+func get_active_quests() -> Array:
+	var active: Array = []
+	for quest_id in quests:
+		if not SaveGame.has_completed_quest(quest_id):
+			active.append(quests[quest_id])
+	return active
+
 func complete_quest(quest_id: String) -> void:
 	if SaveGame.has_completed_quest(quest_id):
 		return
