@@ -9,13 +9,17 @@ func _ready() -> void:
 	_load_quests()
 
 func _load_quests() -> void:
-	var file := FileAccess.open(QUEST_DATA_PATH, FileAccess.READ)
+	load_quest_pack(QUEST_DATA_PATH)
+
+func load_quest_pack(path: String) -> void:
+	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
-		push_warning("Quest data was not found: " + QUEST_DATA_PATH)
+		push_warning("Quest data was not found: " + path)
 		return
 	var parsed = JSON.parse_string(file.get_as_text())
 	if parsed is Dictionary:
-		quests = parsed.get("quests", {})
+		for quest_id in parsed.get("quests", {}):
+			quests[quest_id] = parsed["quests"][quest_id]
 
 func get_quest(quest_id: String) -> Dictionary:
 	return quests.get(quest_id, {})

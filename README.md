@@ -43,6 +43,7 @@ Dialogue pauses player movement, the world clock and NPC schedules, so every con
 - five community NPCs with branching conversations and relationship choices;
 - quests, collectibles, journal/codex entries, inventory, map and local JSON saves;
 - time of day, NPC schedules and an opening cutscene; and
+- a Chapter 1 settlement slice where local voices discuss new visitors, trade and proposed routes; and
 - data validation in `tests/validate_content.py`.
 
 ## How Codex and GPT-5.6 were used

@@ -1,0 +1,12 @@
+{
+  "quests": {
+    "chapter1_listen_to_changes": {
+      "title": "New Paths, Familiar Land",
+      "narrative_goal": "Listen to how visitors, trade and new routes are beginning to affect daily life.",
+      "historical_context": "European explorers, missionaries and railway construction entered Kenyan communities at different times and in different ways. This prototype introduces change through local observation rather than treating it as inevitable progress.",
+      "objectives": ["Speak with the Community Guide.", "Speak with the Market Trader.", "Speak with the Messenger."],
+      "required_npcs": ["chapter1_guide", "chapter1_trader", "chapter1_messenger"],
+      "journal_entry": "Chapter 1 - First Encounters: Newcomers and new routes could bring unfamiliar goods, beliefs and demands. Communities interpreted and responded to these changes from their own perspectives."
+    }
+  }
+}

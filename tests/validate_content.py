@@ -20,6 +20,7 @@ def check_project_layout() -> None:
         "project.godot",
         "scenes/menus/TitleScreen.tscn",
         "scenes/world/PrologueVillage.tscn",
+		"scenes/world/ChapterOneSettlement.tscn",
         "scenes/player/Player.tscn",
         "scripts/save/save_game.gd",
         "scripts/quests/quest_manager.gd",
@@ -29,6 +30,7 @@ def check_project_layout() -> None:
         "scripts/ui/dialogue_panel.gd",
         "scripts/npc/village_npc.gd",
         "scripts/world/collectible.gd",
+		"scripts/ui/prologue_complete.gd",
     ]
     missing = [path for path in required_files if not (ROOT / path).is_file()]
     assert not missing, f"Missing required project files: {', '.join(missing)}"
@@ -41,6 +43,14 @@ def check_quest_data() -> None:
         assert quest.get("title"), f"{quest_id} needs a title."
         assert quest.get("objectives"), f"{quest_id} needs an objective."
         assert quest.get("journal_entry"), f"{quest_id} needs a journal entry."
+
+
+def check_chapter_one_quest_data() -> None:
+    quests = load_json("data/quests/chapter_1_arrival.json").get("quests", {})
+    quest = quests.get("chapter1_listen_to_changes", {})
+    assert quest.get("title"), "Chapter 1 needs a listening quest title."
+    assert len(quest.get("required_npcs", [])) == 3, "Chapter 1 needs three community perspectives."
+    assert quest.get("historical_context"), "Chapter 1 needs historical context."
 
 
 def check_npc_data() -> None:
@@ -85,7 +95,7 @@ def check_chapter_data() -> None:
 
 
 def main() -> int:
-    checks = [check_project_layout, check_quest_data, check_npc_data, check_collectible_data, check_chapter_data]
+    checks = [check_project_layout, check_quest_data, check_chapter_one_quest_data, check_npc_data, check_collectible_data, check_chapter_data]
     for check in checks:
         check()
         print(f"PASS {check.__name__}")

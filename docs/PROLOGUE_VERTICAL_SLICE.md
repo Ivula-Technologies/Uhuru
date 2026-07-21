@@ -23,3 +23,7 @@ The first playable milestone is a small pre-colonial village where the player ca
 1. Replace placeholder shapes with reviewed hand-painted assets.
 2. Add original/licensed ambient audio and sound effects; the current audio settings system is ready for those assets.
 3. Add Godot runtime tests for save/load, dialogue choices, and quest completion. The JSON/project-layout checks are available in `tests/validate_content.py`.
+
+## Chapter 1 foundation
+
+The first Chapter 1 playable settlement is now available after completing the Prologue. It uses a small, historically careful listening quest to introduce how communities observed and discussed new visitors, trade and proposed routes. It is a demo foundation rather than a complete account of first encounters or the Uganda Railway.
