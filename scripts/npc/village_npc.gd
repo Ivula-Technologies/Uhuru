@@ -34,9 +34,22 @@ func _ready() -> void:
 	marker.add_theme_color_override("font_color", Color("372a23"))
 	add_child(marker)
 	var body := Polygon2D.new()
-	body.polygon = PackedVector2Array([Vector2(-18, 28), Vector2(-14, -18), Vector2(14, -18), Vector2(18, 28)])
+	body.polygon = PackedVector2Array([Vector2(-18, 28), Vector2(-13, -11), Vector2(13, -11), Vector2(18, 28)])
 	body.color = Color(profile.get("color", "8e5039"))
 	add_child(body)
+	var head := Polygon2D.new()
+	head.polygon = PackedVector2Array([Vector2(-10, -28), Vector2(0, -34), Vector2(10, -28), Vector2(9, -14), Vector2(0, -9), Vector2(-9, -14)])
+	head.color = Color("70482f")
+	add_child(head)
+	var contribution := Label.new()
+	contribution.text = profile.get("contribution", "")
+	contribution.position = Vector2(-70, 30)
+	contribution.size = Vector2(140, 30)
+	contribution.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	contribution.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	contribution.add_theme_font_size_override("font_size", 11)
+	contribution.add_theme_color_override("font_color", Color("f5e7c3"))
+	add_child(contribution)
 
 func interact() -> void:
 	interaction_requested.emit(self)

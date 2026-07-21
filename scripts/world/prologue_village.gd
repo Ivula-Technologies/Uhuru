@@ -116,58 +116,82 @@ func _build_player() -> void:
 
 func _build_hud() -> void:
 	var layer := CanvasLayer.new()
+	layer.layer = 5
 	add_child(layer)
 	var bar := ColorRect.new()
 	bar.color = Color("17251dcc")
-	bar.size = Vector2(1280, 85)
+	bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	bar.offset_bottom = 86.0
 	layer.add_child(bar)
 	var title := Label.new()
 	title.text = "PROLOGUE - Before Colonial Rule"
-	title.position = Vector2(32, 18)
+	title.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	title.offset_left = 32.0
+	title.offset_top = 16.0
 	title.add_theme_font_size_override("font_size", 26)
 	title.add_theme_color_override("font_color", Color("f4e7c7"))
 	layer.add_child(title)
 	prompt = Label.new()
-	prompt.position = Vector2(32, 52)
+	prompt.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	prompt.offset_left = 32.0
+	prompt.offset_top = 52.0
 	prompt.add_theme_color_override("font_color", Color("e7bb63"))
 	layer.add_child(prompt)
 	var help := Label.new()
-	help.text = "WASD / Arrows: move   Shift: run   E: interact   J: journal   Esc: title"
-	help.position = Vector2(28, 680)
+	help.text = "WASD / Arrows: move | Shift: run | E: interact | J: journal | Q: quests | Esc: title"
+	help.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	help.offset_left = 28.0
+	help.offset_bottom = -18.0
 	layer.add_child(help)
 	clock_label = Label.new()
-	clock_label.position = Vector2(1110, 28)
+	clock_label.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	clock_label.offset_right = -32.0
+	clock_label.offset_top = 26.0
 	clock_label.add_theme_font_size_override("font_size", 20)
 	layer.add_child(clock_label)
 	save_status = Label.new()
-	save_status.position = Vector2(1040, 680)
+	save_status.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	save_status.offset_right = -32.0
+	save_status.offset_bottom = -18.0
 	save_status.add_theme_color_override("font_color", Color("e7bb63"))
 	layer.add_child(save_status)
 	journal_panel = RichTextLabel.new()
 	journal_panel.bbcode_enabled = true
-	journal_panel.position = Vector2(890, 105)
-	journal_panel.size = Vector2(350, 245)
+	journal_panel.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	journal_panel.offset_left = -390.0
+	journal_panel.offset_right = -32.0
+	journal_panel.offset_top = 106.0
+	journal_panel.offset_bottom = 360.0
 	journal_panel.visible = false
 	journal_panel.add_theme_font_size_override("normal_font_size", 16)
 	layer.add_child(journal_panel)
 	quest_panel = RichTextLabel.new()
 	quest_panel.bbcode_enabled = true
-	quest_panel.position = Vector2(890, 105)
-	quest_panel.size = Vector2(350, 245)
+	quest_panel.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	quest_panel.offset_left = -390.0
+	quest_panel.offset_right = -32.0
+	quest_panel.offset_top = 106.0
+	quest_panel.offset_bottom = 360.0
 	quest_panel.visible = false
 	quest_panel.add_theme_font_size_override("normal_font_size", 16)
 	layer.add_child(quest_panel)
 	inventory_panel = RichTextLabel.new()
 	inventory_panel.bbcode_enabled = true
-	inventory_panel.position = Vector2(890, 105)
-	inventory_panel.size = Vector2(350, 245)
+	inventory_panel.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	inventory_panel.offset_left = -390.0
+	inventory_panel.offset_right = -32.0
+	inventory_panel.offset_top = 106.0
+	inventory_panel.offset_bottom = 360.0
 	inventory_panel.visible = false
 	inventory_panel.add_theme_font_size_override("normal_font_size", 16)
 	layer.add_child(inventory_panel)
 	map_panel = RichTextLabel.new()
 	map_panel.bbcode_enabled = true
-	map_panel.position = Vector2(350, 130)
-	map_panel.size = Vector2(580, 360)
+	map_panel.set_anchors_preset(Control.PRESET_CENTER)
+	map_panel.offset_left = -290.0
+	map_panel.offset_right = 290.0
+	map_panel.offset_top = -180.0
+	map_panel.offset_bottom = 180.0
 	map_panel.visible = false
 	map_panel.add_theme_font_size_override("normal_font_size", 20)
 	map_panel.text = "[b]VILLAGE MAP[/b]\n\n        Hills and fields\n\n  Water path       Weaver\n\nYou     Elder       Homestead\n\n        Market path\n\n[yellow]M[/yellow] Close map"
@@ -178,7 +202,7 @@ func _build_hud() -> void:
 
 func _build_dialogue() -> void:
 	dialogue = DialoguePanel.new()
-	dialogue.dialogue_finished.connect(func(): dialogue_open = false; player.movement_enabled = true)
+	dialogue.dialogue_finished.connect(func(): dialogue_open = false; get_tree().paused = false; player.movement_enabled = true)
 	dialogue.choice_selected.connect(_on_dialogue_choice_selected)
 	add_child(dialogue)
 
@@ -239,12 +263,17 @@ func _get_nearby_collectible() -> Collectible:
 func _on_npc_interaction_requested(npc: VillageNPC) -> void:
 	dialogue_open = true
 	player.movement_enabled = false
+	get_tree().paused = true
 	speaking_npc_id = npc.npc_id
 	var line: Dictionary = npc.profile.get("dialogue", {})
 	var text_value: String = line.get("text", "")
 	if SaveGame.get_relationship(npc.npc_id) > 0:
 		text_value += "\n\nYou have listened with care before. The villager remembers."
-	dialogue.show_line(npc.profile.get("display_name", "Villager"), text_value, line.get("choices", []), Color(npc.profile.get("color", "684838")))
+	var contribution: String = npc.profile.get("contribution", "")
+	var speaker := npc.profile.get("display_name", "Villager")
+	if not contribution.is_empty():
+		speaker += " - " + contribution
+	dialogue.show_line(speaker, text_value, line.get("choices", []), Color(npc.profile.get("color", "684838")))
 	var quest_id: String = npc.profile.get("quest_id", "")
 	QuestManager.evaluate_npc_visit(npc.npc_id)
 	if not quest_id.is_empty():

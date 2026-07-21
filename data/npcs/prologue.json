@@ -3,6 +3,7 @@
     {
       "id": "village_elder",
       "display_name": "Village Elder",
+	  "contribution": "community guide",
       "position": [405, 420],
       "color": "684838",
       "quest_id": "prologue_speak_to_elder",
@@ -14,6 +15,7 @@
     {
       "id": "farmer",
       "display_name": "Farmer",
+	  "contribution": "food and seasonal knowledge",
       "position": [690, 520],
       "color": "94723d",
       "schedule": {"dawn": [690, 520], "day": [660, 545], "dusk": [690, 520], "night": [700, 480]},
@@ -26,6 +28,7 @@
     {
       "id": "trader",
       "display_name": "Trader",
+	  "contribution": "trade and news networks",
       "position": [1010, 505],
       "color": "3e5c69",
       "schedule": {"dawn": [1010, 505], "day": [1040, 475], "dusk": [1010, 505], "night": [980, 520]},
@@ -38,6 +41,7 @@
     {
       "id": "weaver",
       "display_name": "Young Weaver",
+	  "contribution": "craft and shared learning",
       "position": [890, 350],
       "color": "a55a51",
       "schedule": {"dawn": [890, 350], "day": [860, 370], "dusk": [890, 350], "night": [910, 390]},
@@ -50,6 +54,7 @@
     {
       "id": "water_carrier",
       "display_name": "Water Carrier",
+	  "contribution": "water stewardship",
       "position": [575, 330],
       "color": "4d7890",
       "schedule": {"dawn": [575, 330], "day": [545, 360], "dusk": [575, 330], "night": [600, 350]},

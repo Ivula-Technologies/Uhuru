@@ -6,8 +6,14 @@ var settings_panel: PanelContainer
 
 func _ready() -> void:
 	SaveGame.load_game()
+	var background_art := TextureRect.new()
+	background_art.texture = load("res://assets/reference/backgrounds/main_menu_concept.png")
+	background_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	background_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	background_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(background_art)
 	var bg := ColorRect.new()
-	bg.color = DARK
+	bg.color = Color("15231d88")
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var land := ColorRect.new()
@@ -21,14 +27,18 @@ func _ready() -> void:
 	box.size = Vector2(540, 470)
 	box.alignment = BoxContainer.ALIGNMENT_CENTER
 	add_child(box)
-	_add_label(box, "UHURU", 78, GOLD)
-	_add_label(box, "EYES OF THE LAND", 23, Color("f4e7c7"))
+	var logo := TextureRect.new()
+	logo.texture = load("res://assets/reference/ui/game_logo.png")
+	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	logo.custom_minimum_size = Vector2(0, 190)
+	box.add_child(logo)
 	_add_label(box, "A journey through Kenya's living history", 17, Color("d9d0b9"))
 	var spacer := Control.new(); spacer.custom_minimum_size.y = 35; box.add_child(spacer)
 	_add_button(box, "Begin the Prologue", func(): get_tree().change_scene_to_file("res://scenes/world/PrologueVillage.tscn"))
 	_add_button(box, "Settings", _show_settings)
 	_add_button(box, "Exit", func(): get_tree().quit())
-	_add_label(box, "Historical fiction • Educational adventure • Early development build", 13, Color("bdb49f"))
+	_add_label(box, "Historical fiction | Educational adventure | Hackathon vertical slice", 13, Color("bdb49f"))
 
 func _add_label(parent: Control, text_value: String, font_size: int, color: Color) -> void:
 	var label := Label.new()
@@ -63,5 +73,5 @@ func _show_settings() -> void:
 	volume.value = SaveGame.data.settings.music_volume
 	volume.value_changed.connect(func(value): SaveGame.data.settings.music_volume = value; AudioManager.set_music_volume(value); SaveGame.save_game())
 	box.add_child(volume)
-	_add_label(box, "Controls: WASD / arrows to move • Shift to run • E to interact", 15, Color.WHITE)
+	_add_label(box, "Controls: WASD / arrows to move | Shift to run | E to interact", 15, Color.WHITE)
 	_add_button(box, "Back", func(): settings_panel.queue_free(); settings_panel = null)

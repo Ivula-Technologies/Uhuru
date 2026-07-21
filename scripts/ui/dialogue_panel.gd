@@ -12,17 +12,21 @@ var portrait: Label
 
 func _ready() -> void:
 	layer = 10
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	panel = PanelContainer.new()
 	panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	panel.position = Vector2(70, -245)
-	panel.size = Vector2(1140, 210)
+	panel.offset_left = 28.0
+	panel.offset_right = -28.0
+	panel.offset_top = -310.0
+	panel.offset_bottom = -26.0
 	panel.visible = false
 	add_child(panel)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 18)
 	panel.add_child(row)
 	portrait = Label.new()
-	portrait.custom_minimum_size = Vector2(140, 150)
+	portrait.custom_minimum_size = Vector2(118, 0)
+	portrait.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	portrait.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	portrait.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	portrait.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -36,10 +40,12 @@ func _ready() -> void:
 	speaker_label.add_theme_font_size_override("font_size", 24)
 	content.add_child(speaker_label)
 	body_label = RichTextLabel.new()
-	body_label.custom_minimum_size.y = 90
+	body_label.custom_minimum_size.y = 72
+	body_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body_label.bbcode_enabled = true
-	body_label.fit_content = true
+	body_label.fit_content = false
 	body_label.scroll_active = false
+	body_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body_label.add_theme_font_size_override("normal_font_size", 18)
 	content.add_child(body_label)
 	choice_box = VBoxContainer.new()
@@ -65,7 +71,7 @@ func show_line(speaker: String, text_value: String, choices: Array = [], portrai
 func _add_choice(text_value: String, callback: Callable) -> void:
 	var button := Button.new()
 	button.text = text_value
-	button.custom_minimum_size.y = 30
+	button.custom_minimum_size.y = 38
 	button.pressed.connect(callback)
 	choice_box.add_child(button)
 
