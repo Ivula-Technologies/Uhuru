@@ -225,7 +225,7 @@ func _build_intro_cutscene() -> void:
 
 func _build_completion_panel() -> void:
 	prologue_complete = PrologueComplete.new()
-	prologue_complete.continue_to_chapter_one.connect(func(): get_tree().paused = false; get_tree().change_scene_to_file("res://scenes/world/ChapterOneSettlement.tscn"))
+	prologue_complete.continue_to_chapter_one.connect(func(): SaveGame.data["chapter"] = "chapter_1"; SaveGame.save_game(); get_tree().paused = false; get_tree().change_scene_to_file("res://scenes/world/ChapterOneSettlement.tscn"))
 	add_child(prologue_complete)
 
 func _build_pause_menu() -> void:

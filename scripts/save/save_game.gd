@@ -1,9 +1,12 @@
 extends Node
 
-const SAVE_PATH := "user://uhuru_save.json"
+const LEGACY_SAVE_PATH := "user://uhuru_save.json"
+const SLOT_PATH_TEMPLATE := "user://uhuru_save_slot_%d.json"
+const MAX_SLOTS := 3
 const CURRENT_VERSION := 1
 
 var data: Dictionary = {}
+var active_slot := 1
 
 func _ready() -> void:
 	load_game()
@@ -23,19 +26,51 @@ func _default_data() -> Dictionary:
 	}
 
 func save_game() -> void:
-	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	var file := FileAccess.open(_slot_path(active_slot), FileAccess.WRITE)
 	if file:
 		file.store_string(JSON.stringify(data))
 
 func load_game() -> void:
 	data = _default_data()
-	if not FileAccess.file_exists(SAVE_PATH):
+	var path := _slot_path(active_slot)
+	if not FileAccess.file_exists(path) and active_slot == 1 and FileAccess.file_exists(LEGACY_SAVE_PATH):
+		path = LEGACY_SAVE_PATH
+	if not FileAccess.file_exists(path):
 		return
-	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	var file := FileAccess.open(path, FileAccess.READ)
 	var parsed = JSON.parse_string(file.get_as_text())
 	if parsed is Dictionary:
 		for key in parsed:
 			data[key] = parsed[key]
+		var settings: Dictionary = _default_data().get("settings", {}).duplicate()
+		settings.merge(data.get("settings", {}), true)
+		data["settings"] = settings
+
+func select_slot(slot: int) -> void:
+	active_slot = clampi(slot, 1, MAX_SLOTS)
+	load_game()
+
+func start_new_game(slot: int) -> void:
+	active_slot = clampi(slot, 1, MAX_SLOTS)
+	data = _default_data()
+	save_game()
+
+func slot_exists(slot: int) -> bool:
+	return FileAccess.file_exists(_slot_path(clampi(slot, 1, MAX_SLOTS))) or (slot == 1 and FileAccess.file_exists(LEGACY_SAVE_PATH))
+
+func get_slot_summary(slot: int) -> String:
+	if not slot_exists(slot):
+		return "Slot %d - Empty" % slot
+	var previous_slot := active_slot
+	select_slot(slot)
+	var chapter: String = str(data.get("chapter", "prologue"))
+	var quest_count := data.get("completed_quests", []).size()
+	active_slot = previous_slot
+	load_game()
+	return "Slot %d - %s (%d quests complete)" % [slot, chapter.replace("_", " ").capitalize(), quest_count]
+
+func _slot_path(slot: int) -> String:
+	return SLOT_PATH_TEMPLATE % clampi(slot, 1, MAX_SLOTS)
 
 func add_journal_entry(entry: String) -> void:
 	var journal: Array = data.get("journal", [])

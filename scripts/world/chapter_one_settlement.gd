@@ -12,6 +12,8 @@ var pause_menu: PauseMenu
 var dialogue_open := false
 
 func _ready() -> void:
+	SaveGame.data["chapter"] = "chapter_1"
+	SaveGame.save_game()
 	QuestManager.load_quest_pack("res://data/quests/chapter_1_arrival.json")
 	_build_environment()
 	_build_player()

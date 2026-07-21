@@ -15,7 +15,7 @@ The first playable milestone is a small pre-colonial village where the player ca
 - Reusable time-of-day clock and environmental tinting for dawn, day, dusk, and night.
 - Data-driven NPC schedules that reposition villagers by time-of-day phase.
 - Village map panel (`M`) as the basis for regional navigation.
-- Persistent save data includes a schema version, completed quests, journal entries, and settings.
+- Persistent save data includes a schema version, completed quests, journal entries and settings, with three selectable local slots and legacy-save compatibility.
 - A completed Prologue now presents a reflective conclusion and a clear transition to the Chapter 1 foundation.
 - A pause menu, manual-save action and persisted dialogue text-size setting support accessible reading and safer play sessions.
 

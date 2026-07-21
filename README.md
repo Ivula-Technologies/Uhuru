@@ -19,7 +19,7 @@ Rather than placing the player in the role of a famous leader, the game begins b
 4. Choose **Import & Edit**, wait for the first asset import, then press **F6** or the play button.
 5. Choose **Begin the Prologue**.
 
-No API key, external service, account, or sample-data setup is required.
+No API key, external service, account, or sample-data setup is required. Select **Play / Save Slots** from the title screen to continue one of three local save slots or start a fresh journey.
 
 ## Controls
 
@@ -43,7 +43,7 @@ Press **Esc** during exploration to open the pause menu. It pauses the world and
 
 - responsive title, HUD, dialogue and game panels;
 - five community NPCs with branching conversations and relationship choices;
-- quests, collectibles, journal/codex entries, inventory, map and local JSON saves;
+- quests, collectibles, journal/codex entries, inventory, map and three local JSON save slots;
 - time of day, NPC schedules and an opening cutscene; and
 - a Chapter 1 settlement slice with listening, exploration and message-delivery quests about new visitors, trade and proposed routes; and
 - data validation in `tests/validate_content.py`.

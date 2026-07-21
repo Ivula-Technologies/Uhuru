@@ -23,6 +23,7 @@ def check_project_layout() -> None:
 		"scenes/world/ChapterOneSettlement.tscn",
         "scenes/player/Player.tscn",
         "scripts/save/save_game.gd",
+		"scripts/ui/title_screen.gd",
         "scripts/quests/quest_manager.gd",
         "scripts/inventory/inventory_manager.gd",
         "scripts/systems/time_of_day.gd",
@@ -35,6 +36,12 @@ def check_project_layout() -> None:
     ]
     missing = [path for path in required_files if not (ROOT / path).is_file()]
     assert not missing, f"Missing required project files: {', '.join(missing)}"
+
+
+def check_save_slot_support() -> None:
+    source = (ROOT / "scripts/save/save_game.gd").read_text(encoding="utf-8")
+    assert "MAX_SLOTS := 3" in source, "The save system must provide three slots."
+    assert "start_new_game" in source and "select_slot" in source, "Save slot selection and fresh starts are required."
 
 
 def check_quest_data() -> None:
@@ -103,7 +110,7 @@ def check_chapter_data() -> None:
 
 
 def main() -> int:
-    checks = [check_project_layout, check_quest_data, check_chapter_one_quest_data, check_chapter_one_collectibles, check_npc_data, check_collectible_data, check_chapter_data]
+    checks = [check_project_layout, check_save_slot_support, check_quest_data, check_chapter_one_quest_data, check_chapter_one_collectibles, check_npc_data, check_collectible_data, check_chapter_data]
     for check in checks:
         check()
         print(f"PASS {check.__name__}")

@@ -3,6 +3,7 @@ extends Control
 const GOLD := Color("e7bb63")
 const DARK := Color("15231d")
 var settings_panel: PanelContainer
+var save_panel: PanelContainer
 
 func _ready() -> void:
 	SaveGame.load_game()
@@ -35,7 +36,7 @@ func _ready() -> void:
 	box.add_child(logo)
 	_add_label(box, "A journey through Kenya's living history", 17, Color("d9d0b9"))
 	var spacer := Control.new(); spacer.custom_minimum_size.y = 35; box.add_child(spacer)
-	_add_button(box, "Begin the Prologue", func(): get_tree().change_scene_to_file("res://scenes/world/PrologueVillage.tscn"))
+	_add_button(box, "Play / Save Slots", _show_save_slots)
 	_add_button(box, "Settings", _show_settings)
 	_add_button(box, "Exit", func(): get_tree().quit())
 	_add_label(box, "Historical fiction | Educational adventure | Hackathon vertical slice", 13, Color("bdb49f"))
@@ -82,3 +83,43 @@ func _show_settings() -> void:
 	box.add_child(text_scale)
 	_add_label(box, "Controls: WASD / arrows to move | Shift to run | E to interact", 15, Color.WHITE)
 	_add_button(box, "Back", func(): settings_panel.queue_free(); settings_panel = null)
+
+func _show_save_slots() -> void:
+	if save_panel:
+		save_panel.queue_free()
+	save_panel = PanelContainer.new()
+	save_panel.set_anchors_preset(Control.PRESET_CENTER)
+	save_panel.offset_left = -290.0
+	save_panel.offset_right = 290.0
+	save_panel.offset_top = -250.0
+	save_panel.offset_bottom = 250.0
+	add_child(save_panel)
+	var box := VBoxContainer.new()
+	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.add_theme_constant_override("separation", 12)
+	save_panel.add_child(box)
+	_add_label(box, "CHOOSE A SAVE SLOT", 28, GOLD)
+	_add_label(box, "Choose Continue for an existing journey or Fresh Start for a new one.", 16, Color.WHITE)
+	for slot in range(1, SaveGame.MAX_SLOTS + 1):
+		var continue_button := Button.new()
+		continue_button.text = "Continue: " + SaveGame.get_slot_summary(slot)
+		continue_button.disabled = not SaveGame.slot_exists(slot)
+		continue_button.custom_minimum_size = Vector2(0, 42)
+		continue_button.pressed.connect(_continue_from_slot.bind(slot))
+		box.add_child(continue_button)
+		var new_button := Button.new()
+		new_button.text = "Fresh Start in Slot " + str(slot)
+		new_button.custom_minimum_size = Vector2(0, 36)
+		new_button.pressed.connect(_start_new_slot.bind(slot))
+		box.add_child(new_button)
+	_add_button(box, "Back", func(): save_panel.queue_free(); save_panel = null)
+
+func _continue_from_slot(slot: int) -> void:
+	SaveGame.select_slot(slot)
+	var chapter_id := str(SaveGame.data.get("chapter", "prologue"))
+	var scene := "res://scenes/world/ChapterOneSettlement.tscn" if chapter_id == "chapter_1" else "res://scenes/world/PrologueVillage.tscn"
+	get_tree().change_scene_to_file(scene)
+
+func _start_new_slot(slot: int) -> void:
+	SaveGame.start_new_game(slot)
+	get_tree().change_scene_to_file("res://scenes/world/PrologueVillage.tscn")
