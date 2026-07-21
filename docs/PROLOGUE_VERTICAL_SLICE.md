@@ -17,6 +17,7 @@ The first playable milestone is a small pre-colonial village where the player ca
 - Village map panel (`M`) as the basis for regional navigation.
 - Persistent save data includes a schema version, completed quests, journal entries, and settings.
 - A completed Prologue now presents a reflective conclusion and a clear transition to the Chapter 1 foundation.
+- A pause menu, manual-save action and persisted dialogue text-size setting support accessible reading and safer play sessions.
 
 ## Next implementation tasks
 

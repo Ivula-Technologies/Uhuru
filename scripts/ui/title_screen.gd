@@ -73,5 +73,12 @@ func _show_settings() -> void:
 	volume.value = SaveGame.data.settings.music_volume
 	volume.value_changed.connect(func(value): SaveGame.data.settings.music_volume = value; AudioManager.set_music_volume(value); SaveGame.save_game())
 	box.add_child(volume)
+	_add_label(box, "Dialogue text size", 18, Color.WHITE)
+	var text_scale := HSlider.new()
+	text_scale.min_value = 80
+	text_scale.max_value = 150
+	text_scale.value = float(SaveGame.data.settings.get("text_scale", 1.0)) * 100.0
+	text_scale.value_changed.connect(func(value): SaveGame.data.settings.text_scale = value / 100.0; SaveGame.save_game())
+	box.add_child(text_scale)
 	_add_label(box, "Controls: WASD / arrows to move | Shift to run | E to interact", 15, Color.WHITE)
 	_add_button(box, "Back", func(): settings_panel.queue_free(); settings_panel = null)

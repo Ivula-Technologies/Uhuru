@@ -19,7 +19,7 @@ func _default_data() -> Dictionary:
 		"visited_npcs": [],
 		"seen_cutscenes": [],
 		"inventory": [],
-		"settings": {"music_volume": 75.0, "text_speed": 1.0}
+		"settings": {"music_volume": 75.0, "text_speed": 1.0, "text_scale": 1.0}
 	}
 
 func save_game() -> void:

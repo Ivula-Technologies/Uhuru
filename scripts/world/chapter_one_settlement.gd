@@ -8,6 +8,7 @@ var dialogue: DialoguePanel
 var prompt: Label
 var quest_panel: RichTextLabel
 var completion_panel: PanelContainer
+var pause_menu: PauseMenu
 var dialogue_open := false
 
 func _ready() -> void:
@@ -18,6 +19,7 @@ func _ready() -> void:
 	_spawn_collectibles()
 	_build_hud()
 	_build_dialogue()
+	_build_pause_menu()
 	QuestManager.quest_completed.connect(_on_quest_completed)
 	InventoryManager.item_added.connect(func(_item_id): _refresh_quest_log())
 	_refresh_quest_log()
@@ -144,11 +146,16 @@ func _build_dialogue() -> void:
 	dialogue = DialoguePanel.new()
 	dialogue.dialogue_finished.connect(func():
 		dialogue_open = false
+		pause_menu.can_open = true
 		if not completion_panel.visible:
 			get_tree().paused = false
 			player.movement_enabled = true
 	)
 	add_child(dialogue)
+
+func _build_pause_menu() -> void:
+	pause_menu = PauseMenu.new()
+	add_child(pause_menu)
 
 func _process(_delta: float) -> void:
 	var nearby := _get_nearby_npc()
@@ -165,8 +172,6 @@ func _process(_delta: float) -> void:
 		nearby_collectible.interact()
 	if Input.is_action_just_pressed("quest_log"):
 		quest_panel.visible = not quest_panel.visible
-	if Input.is_key_pressed(KEY_ESCAPE) and not dialogue_open:
-		get_tree().change_scene_to_file("res://scenes/menus/TitleScreen.tscn")
 
 func _get_nearby_npc() -> VillageNPC:
 	for node in get_tree().get_nodes_in_group("village_npc"):
@@ -185,6 +190,7 @@ func _get_nearby_collectible() -> Collectible:
 func _on_npc_interaction(npc: VillageNPC) -> void:
 	dialogue_open = true
 	player.movement_enabled = false
+	pause_menu.can_open = false
 	get_tree().paused = true
 	var line: Dictionary = npc.profile.get("dialogue", {})
 	dialogue.show_line(npc.profile.get("display_name", "Villager") + " - " + npc.profile.get("contribution", ""), line.get("text", ""), line.get("choices", []), Color(npc.profile.get("color", "684838")))
@@ -192,6 +198,7 @@ func _on_npc_interaction(npc: VillageNPC) -> void:
 
 func _on_quest_completed(quest_id: String) -> void:
 	if quest_id.begins_with("chapter1_") and _chapter_one_complete():
+		pause_menu.can_open = false
 		completion_panel.visible = true
 		get_tree().paused = true
 	_refresh_quest_log()

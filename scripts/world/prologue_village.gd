@@ -14,6 +14,7 @@ var save_status: Label
 var world_tint: CanvasModulate
 var dialogue: DialoguePanel
 var prologue_complete: PrologueComplete
+var pause_menu: PauseMenu
 var dialogue_open := false
 var nearby_npc: VillageNPC
 var speaking_npc_id := ""
@@ -28,6 +29,7 @@ func _ready() -> void:
 	_build_hud()
 	_build_dialogue()
 	_build_completion_panel()
+	_build_pause_menu()
 	_build_intro_cutscene()
 	QuestManager.quest_completed.connect(_on_quest_completed)
 	InventoryManager.item_added.connect(_on_item_added)
@@ -206,7 +208,13 @@ func _build_hud() -> void:
 
 func _build_dialogue() -> void:
 	dialogue = DialoguePanel.new()
-	dialogue.dialogue_finished.connect(func(): dialogue_open = false; get_tree().paused = false; player.movement_enabled = true)
+	dialogue.dialogue_finished.connect(func():
+		dialogue_open = false
+		if not prologue_complete.panel.visible:
+			pause_menu.can_open = true
+			get_tree().paused = false
+			player.movement_enabled = true
+	)
 	dialogue.choice_selected.connect(_on_dialogue_choice_selected)
 	add_child(dialogue)
 
@@ -220,9 +228,14 @@ func _build_completion_panel() -> void:
 	prologue_complete.continue_to_chapter_one.connect(func(): get_tree().paused = false; get_tree().change_scene_to_file("res://scenes/world/ChapterOneSettlement.tscn"))
 	add_child(prologue_complete)
 
+func _build_pause_menu() -> void:
+	pause_menu = PauseMenu.new()
+	add_child(pause_menu)
+
 func _show_prologue_complete() -> void:
 	if prologue_complete.panel.visible:
 		return
+	pause_menu.can_open = false
 	get_tree().paused = true
 	prologue_complete.show_completion()
 
@@ -258,8 +271,6 @@ func _process(_delta: float) -> void:
 	if Input.is_key_pressed(KEY_F5):
 		SaveGame.save_game()
 		save_status.text = "Progress saved"
-	if Input.is_key_pressed(KEY_ESCAPE) and not dialogue_open:
-		get_tree().change_scene_to_file("res://scenes/menus/TitleScreen.tscn")
 
 func _get_nearby_npc() -> VillageNPC:
 	for node in get_tree().get_nodes_in_group("village_npc"):
@@ -278,6 +289,7 @@ func _get_nearby_collectible() -> Collectible:
 func _on_npc_interaction_requested(npc: VillageNPC) -> void:
 	dialogue_open = true
 	player.movement_enabled = false
+	pause_menu.can_open = false
 	get_tree().paused = true
 	speaking_npc_id = npc.npc_id
 	var line: Dictionary = npc.profile.get("dialogue", {})

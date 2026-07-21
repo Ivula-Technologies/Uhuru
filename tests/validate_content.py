@@ -28,6 +28,7 @@ def check_project_layout() -> None:
         "scripts/systems/time_of_day.gd",
         "scripts/systems/audio_manager.gd",
         "scripts/ui/dialogue_panel.gd",
+		"scripts/ui/pause_menu.gd",
         "scripts/npc/village_npc.gd",
         "scripts/world/collectible.gd",
 		"scripts/ui/prologue_complete.gd",

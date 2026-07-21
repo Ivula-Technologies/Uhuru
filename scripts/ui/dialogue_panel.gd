@@ -52,6 +52,9 @@ func _ready() -> void:
 	content.add_child(choice_box)
 
 func show_line(speaker: String, text_value: String, choices: Array = [], portrait_color := Color("684838")) -> void:
+	var text_scale: float = clampf(float(SaveGame.data.get("settings", {}).get("text_scale", 1.0)), 0.8, 1.5)
+	speaker_label.add_theme_font_size_override("font_size", roundi(24 * text_scale))
+	body_label.add_theme_font_size_override("normal_font_size", roundi(18 * text_scale))
 	panel.visible = true
 	speaker_label.text = speaker
 	body_label.text = text_value

@@ -37,6 +37,8 @@ No API key, external service, account, or sample-data setup is required.
 
 Dialogue pauses player movement, the world clock and NPC schedules, so every conversation can be read at the player's own pace.
 
+Press **Esc** during exploration to open the pause menu. It pauses the world and offers Resume, Save Game and Return to Title Screen. The title-screen settings menu also includes a persisted dialogue text-size control (80% to 150%).
+
 ## What is implemented
 
 - responsive title, HUD, dialogue and game panels;
