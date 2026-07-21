@@ -48,7 +48,35 @@ Dialogue pauses player movement, the world clock and NPC schedules, so every con
 
 ## How Codex and GPT-5.6 were used
 
-This project was developed collaboratively in Codex Desktop with GPT-5.6. The model was used as an implementation partner to turn the design and research documents into a scoped Godot vertical slice; build the quest, NPC, dialogue, save and UI systems; organise the supplied concept boards; and refine the UI after visual feedback. The creator supplied the direction, historical focus, visual assets, review feedback and final decisions.
+This project was developed collaboratively in **Codex Desktop with GPT-5.6**. I used Codex as a practical coding partner while I remained responsible for the game's purpose, historical focus, supplied visual material, testing feedback and final decisions.
+
+### Planning and scope
+
+I provided the game-design document, historical research bible, technical design, production plan and asset boards. With GPT-5.6, I turned those documents into a realistic Godot vertical slice: the Prologue first, followed by a small Chapter 1 foundation, instead of claiming to complete the entire historical timeline at once.
+
+### Building the game
+
+Codex and GPT-5.6 helped implement and organise the Godot 4 project, including:
+
+- the folder structure, title screen and settings;
+- player movement, camera, collisions and interactions;
+- reusable NPC dialogue, choices and relationship tracking;
+- quests, collectibles, inventory, journal/codex, map and local save data;
+- time of day and NPC schedules;
+- the Prologue completion flow and the Chapter 1 listening-quest prototype; and
+- the README, test checks and GitHub commits.
+
+### Iteration from feedback
+
+I tested the prototype in Godot and gave Codex concrete feedback when the interface clipped and conversations were difficult to read. GPT-5.6 then helped change fixed-position UI into responsive, anchored layouts; made dialogue pause player movement, time and NPC schedules; and added clearer player and villager visual markers. This was an iterative workflow: I reviewed the result, identified what was not working, and directed the changes.
+
+### Assets and responsible use
+
+I supplied the generated visual concept boards. Codex organised the boards within the project and used cropped branding/menu panels for presentation, while the README clearly identifies them as concept art rather than final production sprites. GPT-5.6 also helped keep the prototype's historical framing careful: it focuses on community perspectives and identifies later content as requiring continued research and consultation.
+
+### Verification and ownership
+
+Codex ran the project's content validation after changes and pushed the reviewed code to GitHub. AI assistance accelerated implementation and documentation, but the project's creative direction, source material, review feedback and submission decisions are mine.
 
 ## Art and historical care
 
