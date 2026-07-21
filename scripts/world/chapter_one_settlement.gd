@@ -1,6 +1,7 @@
 extends Node2D
 
 const NPC_SCRIPT := preload("res://scripts/npc/village_npc.gd")
+const COLLECTIBLE_SCRIPT := preload("res://scripts/world/collectible.gd")
 
 var player: CharacterBody2D
 var dialogue: DialoguePanel
@@ -14,9 +15,11 @@ func _ready() -> void:
 	_build_environment()
 	_build_player()
 	_spawn_npcs()
+	_spawn_collectibles()
 	_build_hud()
 	_build_dialogue()
 	QuestManager.quest_completed.connect(_on_quest_completed)
+	InventoryManager.item_added.connect(func(_item_id): _refresh_quest_log())
 	_refresh_quest_log()
 
 func _build_environment() -> void:
@@ -63,6 +66,20 @@ func _spawn_npcs() -> void:
 		npc.position = Vector2(location[0], location[1])
 		npc.interaction_requested.connect(_on_npc_interaction)
 		add_child(npc)
+
+func _spawn_collectibles() -> void:
+	var file := FileAccess.open("res://data/collectibles/chapter_1_arrival.json", FileAccess.READ)
+	var content: Dictionary = JSON.parse_string(file.get_as_text())
+	for profile_value in content.get("collectibles", []):
+		var profile: Dictionary = profile_value
+		if InventoryManager.has_item(profile.get("id", "")):
+			continue
+		var collectible: Collectible = COLLECTIBLE_SCRIPT.new()
+		collectible.setup(profile)
+		var location: Array = profile.get("position", [0, 0])
+		collectible.position = Vector2(location[0], location[1])
+		collectible.interaction_requested.connect(func(item: Collectible): item.collect())
+		add_child(collectible)
 
 func _build_hud() -> void:
 	var layer := CanvasLayer.new()
@@ -125,14 +142,27 @@ func _build_hud() -> void:
 
 func _build_dialogue() -> void:
 	dialogue = DialoguePanel.new()
-	dialogue.dialogue_finished.connect(func(): dialogue_open = false; get_tree().paused = false; player.movement_enabled = true)
+	dialogue.dialogue_finished.connect(func():
+		dialogue_open = false
+		if not completion_panel.visible:
+			get_tree().paused = false
+			player.movement_enabled = true
+	)
 	add_child(dialogue)
 
 func _process(_delta: float) -> void:
 	var nearby := _get_nearby_npc()
-	prompt.text = "[E] Listen to " + nearby.profile.get("display_name", "villager") if nearby else "Explore the changing settlement."
+	var nearby_collectible := _get_nearby_collectible()
+	if nearby:
+		prompt.text = "[E] Listen to " + nearby.profile.get("display_name", "villager")
+	elif nearby_collectible:
+		prompt.text = "[E] Collect " + nearby_collectible.profile.get("display_name", "note")
+	else:
+		prompt.text = "Explore the changing settlement."
 	if nearby and not dialogue_open and Input.is_action_just_pressed("interact"):
 		nearby.interact()
+	elif nearby_collectible and not dialogue_open and Input.is_action_just_pressed("interact"):
+		nearby_collectible.interact()
 	if Input.is_action_just_pressed("quest_log"):
 		quest_panel.visible = not quest_panel.visible
 	if Input.is_key_pressed(KEY_ESCAPE) and not dialogue_open:
@@ -145,6 +175,13 @@ func _get_nearby_npc() -> VillageNPC:
 			return npc
 	return null
 
+func _get_nearby_collectible() -> Collectible:
+	for node in get_tree().get_nodes_in_group("interactable"):
+		var collectible := node as Collectible
+		if collectible and collectible.player_near:
+			return collectible
+	return null
+
 func _on_npc_interaction(npc: VillageNPC) -> void:
 	dialogue_open = true
 	player.movement_enabled = false
@@ -154,14 +191,26 @@ func _on_npc_interaction(npc: VillageNPC) -> void:
 	QuestManager.evaluate_npc_visit(npc.npc_id)
 
 func _on_quest_completed(quest_id: String) -> void:
-	if quest_id == "chapter1_listen_to_changes":
+	if quest_id.begins_with("chapter1_") and _chapter_one_complete():
 		completion_panel.visible = true
 		get_tree().paused = true
 	_refresh_quest_log()
 
+func _chapter_one_complete() -> bool:
+	for quest_id in ["chapter1_listen_to_changes", "chapter1_observe_exchange", "chapter1_deliver_message"]:
+		if not SaveGame.has_completed_quest(quest_id):
+			return false
+	return true
+
 func _refresh_quest_log() -> void:
-	var quest := QuestManager.get_quest("chapter1_listen_to_changes")
-	quest_panel.text = "[b]CHAPTER 1 QUEST[/b]\n\n[b]" + quest.get("title", "") + "[/b]\n" + quest.get("narrative_goal", "") + "\n\n" + "\n".join(quest.get("objectives", []))
+	var lines: Array[String] = ["[b]CHAPTER 1 QUESTS[/b]"]
+	for quest_id in ["chapter1_listen_to_changes", "chapter1_observe_exchange", "chapter1_deliver_message"]:
+		var quest := QuestManager.get_quest(quest_id)
+		var status := "[color=#a7d36a]Complete[/color]" if SaveGame.has_completed_quest(quest_id) else "[color=#e7bb63]Active[/color]"
+		lines.append("\n[b]" + quest.get("title", "") + "[/b] - " + status + "\n" + quest.get("narrative_goal", ""))
+		for objective in quest.get("objectives", []):
+			lines.append("- " + objective)
+	quest_panel.text = "\n".join(lines)
 
 func _add_label(parent: Control, text_value: String, font_size: int, color: Color) -> void:
 	var label := Label.new()

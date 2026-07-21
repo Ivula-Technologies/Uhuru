@@ -51,6 +51,13 @@ def check_chapter_one_quest_data() -> None:
     assert quest.get("title"), "Chapter 1 needs a listening quest title."
     assert len(quest.get("required_npcs", [])) == 3, "Chapter 1 needs three community perspectives."
     assert quest.get("historical_context"), "Chapter 1 needs historical context."
+    assert len(quests) >= 3, "Chapter 1 needs a small quest loop, not one interaction."
+
+
+def check_chapter_one_collectibles() -> None:
+    collectibles = load_json("data/collectibles/chapter_1_arrival.json").get("collectibles", [])
+    assert len(collectibles) == 3, "Chapter 1 needs three exploration notes."
+    assert {"market_note", "route_note", "community_message"} == {item.get("id") for item in collectibles}
 
 
 def check_npc_data() -> None:
@@ -95,7 +102,7 @@ def check_chapter_data() -> None:
 
 
 def main() -> int:
-    checks = [check_project_layout, check_quest_data, check_chapter_one_quest_data, check_npc_data, check_collectible_data, check_chapter_data]
+    checks = [check_project_layout, check_quest_data, check_chapter_one_quest_data, check_chapter_one_collectibles, check_npc_data, check_collectible_data, check_chapter_data]
     for check in checks:
         check()
         print(f"PASS {check.__name__}")

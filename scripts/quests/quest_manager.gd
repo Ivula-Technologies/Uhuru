@@ -44,29 +44,27 @@ func complete_quest(quest_id: String) -> void:
 
 func evaluate_npc_visit(npc_id: String) -> void:
 	SaveGame.mark_npc_visited(npc_id)
-	for quest_id in quests:
-		var quest: Dictionary = quests[quest_id]
-		var required_npcs: Array = quest.get("required_npcs", [])
-		if required_npcs.is_empty() or SaveGame.has_completed_quest(quest_id):
-			continue
-		var all_visited := true
-		for required_npc in required_npcs:
-			if not SaveGame.has_visited_npc(required_npc):
-				all_visited = false
-				break
-		if all_visited:
-			complete_quest(quest_id)
+	evaluate_progress()
 
 func evaluate_inventory() -> void:
+	evaluate_progress()
+
+func evaluate_progress() -> void:
 	for quest_id in quests:
 		var quest: Dictionary = quests[quest_id]
-		var required_items: Array = quest.get("required_items", [])
-		if required_items.is_empty() or SaveGame.has_completed_quest(quest_id):
+		if SaveGame.has_completed_quest(quest_id):
 			continue
-		var all_collected := true
-		for item_id in required_items:
-			if not InventoryManager.has_item(item_id):
-				all_collected = false
+		if quest.get("required_npcs", []).is_empty() and quest.get("required_items", []).is_empty():
+			continue
+		var all_npcs_visited := true
+		for required_npc in quest.get("required_npcs", []):
+			if not SaveGame.has_visited_npc(required_npc):
+				all_npcs_visited = false
 				break
-		if all_collected:
+		var all_items_collected := true
+		for item_id in quest.get("required_items", []):
+			if not InventoryManager.has_item(item_id):
+				all_items_collected = false
+				break
+		if all_npcs_visited and all_items_collected:
 			complete_quest(quest_id)

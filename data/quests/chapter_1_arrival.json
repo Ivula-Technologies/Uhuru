@@ -7,6 +7,23 @@
       "objectives": ["Speak with the Community Guide.", "Speak with the Market Trader.", "Speak with the Messenger."],
       "required_npcs": ["chapter1_guide", "chapter1_trader", "chapter1_messenger"],
       "journal_entry": "Chapter 1 - First Encounters: Newcomers and new routes could bring unfamiliar goods, beliefs and demands. Communities interpreted and responded to these changes from their own perspectives."
+    },
+    "chapter1_observe_exchange": {
+      "title": "Read the Market",
+      "narrative_goal": "Gather two observations about how exchange and information are changing.",
+      "historical_context": "Markets and travel routes connected communities before colonial rule. New arrivals could alter existing networks without erasing the knowledge and relationships already present.",
+      "objectives": ["Collect the trader's market note.", "Collect the messenger's route note."],
+      "required_items": ["market_note", "route_note"],
+      "journal_entry": "Exchange and Information: Communities watched how new goods, routes and messages affected relationships that already linked people together."
+    },
+    "chapter1_deliver_message": {
+      "title": "A Message for the Council",
+      "narrative_goal": "Carry a community message to the Messenger so the wider council can discuss the changes together.",
+      "historical_context": "Community discussion, local authority and communication networks mattered when people faced uncertainty. Responses to colonial expansion were diverse and should not be reduced to a single story.",
+      "objectives": ["Collect the community message.", "Speak with the Messenger."],
+      "required_items": ["community_message"],
+      "required_npcs": ["chapter1_messenger"],
+      "journal_entry": "Community Deliberation: When circumstances changed, communities drew on local knowledge, debate and communication to consider their responses."
     }
   }
 }

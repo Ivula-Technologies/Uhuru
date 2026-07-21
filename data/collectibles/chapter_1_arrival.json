@@ -1,0 +1,25 @@
+{
+  "collectibles": [
+    {
+      "id": "market_note",
+      "display_name": "Market Note",
+      "position": [650, 570],
+      "color": "e7bb63",
+      "journal_entry": "Market Note: People notice changes in prices, goods and travelling news through the practical work of exchange."
+    },
+    {
+      "id": "route_note",
+      "display_name": "Route Note",
+      "position": [1110, 550],
+      "color": "c5b58b",
+      "journal_entry": "Route Note: Paths are more than lines on a map; they connect families, livelihoods, landscapes and obligations."
+    },
+    {
+      "id": "community_message",
+      "display_name": "Community Message",
+      "position": [315, 570],
+      "color": "d26c69",
+      "journal_entry": "Community Message: Sharing information helped people make decisions together rather than facing uncertainty alone."
+    }
+  ]
+}

@@ -26,4 +26,4 @@ The first playable milestone is a small pre-colonial village where the player ca
 
 ## Chapter 1 foundation
 
-The first Chapter 1 playable settlement is now available after completing the Prologue. It uses a small, historically careful listening quest to introduce how communities observed and discussed new visitors, trade and proposed routes. It is a demo foundation rather than a complete account of first encounters or the Uganda Railway.
+The first Chapter 1 playable settlement is now available after completing the Prologue. It uses a small, historically careful quest loop: listen to three community perspectives, gather market and route observations, and carry a community message to the Messenger. It is a demo foundation rather than a complete account of first encounters or the Uganda Railway.
