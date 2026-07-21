@@ -13,6 +13,7 @@ var clock_label: Label
 var save_status: Label
 var world_tint: CanvasModulate
 var dialogue: DialoguePanel
+var prologue_complete: PrologueComplete
 var dialogue_open := false
 var nearby_npc: VillageNPC
 var speaking_npc_id := ""
@@ -26,11 +27,14 @@ func _ready() -> void:
 	_spawn_collectibles()
 	_build_hud()
 	_build_dialogue()
+	_build_completion_panel()
 	_build_intro_cutscene()
 	QuestManager.quest_completed.connect(_on_quest_completed)
 	InventoryManager.item_added.connect(_on_item_added)
 	TimeOfDay.time_changed.connect(_on_time_changed)
 	_on_time_changed(TimeOfDay.hour, TimeOfDay.get_phase())
+	if QuestManager.get_active_quests().is_empty():
+		call_deferred("_show_prologue_complete")
 	if not SaveGame.has_seen_cutscene("prologue_arrival"):
 		player.movement_enabled = false
 		intro_cutscene.show_sequence([
@@ -211,6 +215,17 @@ func _build_intro_cutscene() -> void:
 	intro_cutscene.finished.connect(_on_intro_cutscene_finished)
 	add_child(intro_cutscene)
 
+func _build_completion_panel() -> void:
+	prologue_complete = PrologueComplete.new()
+	prologue_complete.continue_to_chapter_one.connect(func(): get_tree().paused = false; get_tree().change_scene_to_file("res://scenes/world/ChapterOneSettlement.tscn"))
+	add_child(prologue_complete)
+
+func _show_prologue_complete() -> void:
+	if prologue_complete.panel.visible:
+		return
+	get_tree().paused = true
+	prologue_complete.show_completion()
+
 func _process(_delta: float) -> void:
 	nearby_npc = _get_nearby_npc()
 	var nearby_collectible := _get_nearby_collectible()
@@ -295,6 +310,8 @@ func _on_quest_completed(_quest_id: String) -> void:
 	_refresh_journal()
 	_refresh_quest_log()
 	journal_panel.visible = true
+	if QuestManager.get_active_quests().is_empty():
+		_show_prologue_complete()
 
 func _on_dialogue_choice_selected(choice: Dictionary) -> void:
 	if not speaking_npc_id.is_empty():

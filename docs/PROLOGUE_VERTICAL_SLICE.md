@@ -16,8 +16,10 @@ The first playable milestone is a small pre-colonial village where the player ca
 - Data-driven NPC schedules that reposition villagers by time-of-day phase.
 - Village map panel (`M`) as the basis for regional navigation.
 - Persistent save data includes a schema version, completed quests, journal entries, and settings.
+- A completed Prologue now presents a reflective conclusion and a clear transition to the Chapter 1 foundation.
 
 ## Next implementation tasks
 
 1. Replace placeholder shapes with reviewed hand-painted assets.
-2. Add Godot runtime tests for save/load, dialogue choices, and quest completion. The JSON/project-layout checks are available in `tests/validate_content.py`.
+2. Add original/licensed ambient audio and sound effects; the current audio settings system is ready for those assets.
+3. Add Godot runtime tests for save/load, dialogue choices, and quest completion. The JSON/project-layout checks are available in `tests/validate_content.py`.
